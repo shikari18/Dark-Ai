@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Terms of Service - Dark AI Assistant</title>
+    <style>
+      /* Import the same styles from the main page */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          "Helvetica Neue", Arial, sans-serif;
+        background: #000000;
+        color: #e0e0e0;
+        min-height: 100vh;
+        transition: background 0.3s, color 0.3s;
+      }
+
+      body.light-mode {
+        background: #f5f5f5;
+        color: #333;
+      }
+
+      /* Header */
+      .header {
+        background: #111111;
+        border-bottom: 1px solid #222222;
+        padding: 15px 20px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        transition: background 0.3s, border-color 0.3s;
+      }
+
+      body.light-mode .header {
+        background: #ffffff;
+        border-bottom: 1px solid #e0e0e0;
+      }
+
+      .logo {
+        font-size: 18px;
+        font-weight: 600;
+        color: #e0e0e0;
+        transition: color 0.3s;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      body.light-mode .logo {
+        color: #333;
+      }
+
+      .logo-icon {
+        color: #c00;
+        font-weight: bold;
+      }
+
+      .back-btn {
+        background: #222222;
+        border: 1px solid #333333;
+        color: #e0e0e0;
+        padding: 8px 16px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 14px;
+        transition: background 0.2s, border-color 0.3s, color 0.3s;
+        text-decoration: none;
+        display: inline-block;
+      }
+
+      body.light-mode .back-btn {
+        background: #f0f0f0;
+        border: 1px solid #d0d0d0;
+        color: #333;
+      }
+
+      .back-btn:hover {
+        background: #2a2a2a;
+      }
+
+      body.light-mode .back-btn:hover {
+        background: #e0e0e0;
+      }
+
+      /* Main Content */
+      .main-content {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 40px 20px;
+      }
+
+      .page-title {
+        font-size: 32px;
+        margin-bottom: 20px;
+        color: #e0e0e0;
+        transition: color 0.3s;
+      }
+
+      body.light-mode .page-title {
+        color: #333;
+      }
+
+      .last-updated {
+        color: #888;
+        margin-bottom: 30px;
+        font-style: italic;
+        transition: color 0.3s;
+      }
+
+      body.light-mode .last-updated {
+        color: #666;
+      }
+
+      /* Terms Content */
+      .terms-content {
+        line-height: 1.6;
+      }
+
+      .terms-section {
+        margin-bottom: 30px;
+      }
+
+      .terms-section h2 {
+        font-size: 20px;
+        margin-bottom: 15px;
+        color: #e0e0e0;
+        transition: color 0.3s;
+      }
+
+      body.light-mode .terms-section h2 {
+        color: #333;
+      }
+
+      .terms-section p {
+        margin-bottom: 15px;
+        color: #b0b0b0;
+        transition: color 0.3s;
+      }
+
+      body.light-mode .terms-section p {
+        color: #666;
+      }
+
+      .terms-section ul {
+        margin-left: 20px;
+        margin-bottom: 15px;
+      }
+
+      .terms-section li {
+        margin-bottom: 8px;
+        color: #b0b0b0;
+        transition: color 0.3s;
+      }
+
+      body.light-mode .terms-section li {
+        color: #666;
+      }
+
+      .highlight {
+        color: #c00;
+        font-weight: 500;
+      }
+
+      /* Footer */
+      .footer {
+        background: #111111;
+        border-top: 1px solid #222222;
+        padding: 20px;
+        text-align: center;
+        transition: background 0.3s, border-color 0.3s;
+      }
+
+      body.light-mode .footer {
+        background: #ffffff;
+        border-top: 1px solid #e0e0e0;
+      }
+
+      .footer-links {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        margin-bottom: 15px;
+        flex-wrap: wrap;
+      }
+
+      .footer-link {
+        color: #b0b0b0;
+        text-decoration: none;
+        font-size: 14px;
+        transition: color 0.3s;
+      }
+
+      body.light-mode .footer-link {
+        color: #666;
+      }
+
+      .footer-link:hover {
+        color: #e0e0e0;
+      }
+
+      body.light-mode .footer-link:hover {
+        color: #333;
+      }
+
+      .copyright {
+        color: #888;
+        font-size: 14px;
+        transition: color 0.3s;
+      }
+
+      body.light-mode .copyright {
+        color: #666;
+      }
+
+      /* Responsive */
+      @media (max-width: 768px) {
+        .main-content {
+          padding: 20px 15px;
+        }
+
+        .page-title {
+          font-size: 24px;
+        }
+
+        .header {
+          padding: 12px 15px;
+        }
+
+        .footer-links {
+          gap: 15px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Header -->
+    <header class="header">
+      <a href="index.html" class="logo">
+        <span class="logo-icon">DARK</span>
+        <span>AI Assistant</span>
+      </a>
+      <a href="index.html" class="back-btn">← Back to Chat</a>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <h1 class="page-title">Terms of Service</h1>
+      <p class="last-updated">Last updated: January 1, 2024</p>
+
+      <div class="terms-content">
+        <div class="terms-section">
+          <h2>1. Acceptance of Terms</h2>
+          <p>
+            By accessing and using Dark AI Assistant ("the Service"), you accept
+            and agree to be bound by the terms and provision of this agreement.
+          </p>
+        </div>
+
+        <div class="terms-section">
+          <h2>2. Description of Service</h2>
+          <p>
+            Dark AI Assistant is an artificial intelligence-powered chatbot that
+            provides information, answers questions, and assists with various
+            tasks. The Service may be updated, modified, or discontinued at our
+            discretion.
+          </p>
+        </div>
+
+        <div class="terms-section">
+          <h2>3. User Accounts</h2>
+          <p>
+            To access certain features of the Service, you may be required to
+            create a user account. You are responsible for:
+          </p>
+          <ul>
+            <li>Maintaining the confidentiality of your account credentials</li>
+            <li>All activities that occur under your account</li>
+            <li>
+              Notifying us immediately of any unauthorized use of your account
+            </li>
+          </ul>
+        </div>
+
+        <div class="terms-section">
+          <h2>4. User Conduct</h2>
+          <p>You agree not to use the Service to:</p>
+          <ul>
+            <li>
+              Violate any applicable laws, regulations, or third-party rights
+            </li>
+            <li>Transmit harmful, offensive, or illegal content</li>
+            <li>Impersonate any person or entity</li>
+            <li>Interfere with or disrupt the Service</li>
+            <li>
+              Attempt to gain unauthorized access to any part of the Service
+            </li>
+            <li>
+              Use the Service for any commercial purpose without our express
+              consent
+            </li>
+          </ul>
+        </div>
+
+        <div class="terms-section">
+          <h2>5. Intellectual Property</h2>
+          <p>
+            The Service and its original content, features, and functionality
+            are owned by Dark AI and are protected by international copyright,
+            trademark, patent, trade secret, and other intellectual property
+            laws.
+          </p>
+          <p>
+            You retain ownership of any content you submit through the Service,
+            but you grant us a worldwide, non-exclusive, royalty-free license to
+            use, reproduce, and display such content as necessary to provide the
+            Service.
+          </p>
+        </div>
+
+        <div class="terms-section">
+          <h2>6. Privacy</h2>
+          <p>
+            Your privacy is important to us. Our Privacy Policy explains how we
+            collect, use, and protect your personal information. By using the
+            Service, you agree to the collection and use of information in
+            accordance with our Privacy Policy.
+          </p>
+        </div>
+
+        <div class="terms-section">
+          <h2>7. AI-Generated Content</h2>
+          <p>
+            The Service uses artificial intelligence to generate responses. You
+            acknowledge that:
+          </p>
+          <ul>
+            <li>
+              AI-generated content may not always be accurate, complete, or
+              reliable
+            </li>
+            <li>
+              You should not rely solely on AI-generated content for critical
+              decisions
+            </li>
+            <li>
+              We are not responsible for any consequences resulting from your
+              use of AI-generated content
+            </li>
+          </ul>
+        </div>
+
+        <div class="terms-section">
+          <h2>8. Limitation of Liability</h2>
+          <p>
+            To the fullest extent permitted by applicable law, Dark AI shall not
+            be liable for any indirect, incidental, special, consequential, or
+            punitive damages, including without limitation, loss of profits,
+            data, use, goodwill, or other intangible losses, resulting from:
+          </p>
+          <ul>
+            <li>
+              Your access to or use of or inability to access or use the Service
+            </li>
+            <li>Any conduct or content of any third party on the Service</li>
+            <li>Any content obtained from the Service</li>
+            <li>
+              Unauthorized access, use, or alteration of your transmissions or
+              content
+            </li>
+          </ul>
+        </div>
+
+        <div class="terms-section">
+          <h2>9. Termination</h2>
+          <p>
+            We may terminate or suspend your account and access to the Service
+            immediately, without prior notice or liability, for any reason
+            whatsoever, including without limitation if you breach the Terms.
+          </p>
+          <p>
+            Upon termination, your right to use the Service will cease
+            immediately.
+          </p>
+        </div>
+
+        <div class="terms-section">
+          <h2>10. Changes to Terms</h2>
+          <p>
+            We reserve the right, at our sole discretion, to modify or replace
+            these Terms at any time. If a revision is material, we will provide
+            at least 30 days' notice prior to any new terms taking effect. What
+            constitutes a material change will be determined at our sole
+            discretion.
+          </p>
+          <p>
+            By continuing to access or use our Service after those revisions
+            become effective, you agree to be bound by the revised terms.
+          </p>
+        </div>
+
+        <div class="terms-section">
+          <h2>11. Governing Law</h2>
+          <p>
+            These Terms shall be governed and construed in accordance with the
+            laws of the United States, without regard to its conflict of law
+            provisions.
+          </p>
+        </div>
+
+        <div class="terms-section">
+          <h2>12. Contact Information</h2>
+          <p>
+            If you have any questions about these Terms, please contact us at:
+          </p>
+          <p class="highlight">support@darkai.com</p>
+        </div>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="footer-links">
+        <a href="index.html" class="footer-link">Home</a>
+        <a href="contact.html" class="footer-link">Contact</a>
+        <a href="privacy.html" class="footer-link">Privacy Policy</a>
+        <a href="terms.html" class="footer-link">Terms of Service</a>
+      </div>
+      <p class="copyright">
+        &copy; 2024 Dark AI Assistant. All rights reserved.
+      </p>
+    </footer>
+  </body>
+</html>

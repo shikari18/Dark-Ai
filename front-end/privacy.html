@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy Policy - Dark AI</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: #000000;
+            color: #e0e0e0;
+            line-height: 1.6;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        body.light-mode {
+            background: #f5f5f5;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            border-bottom: 1px solid #222222;
+            margin-bottom: 30px;
+        }
+
+        body.light-mode .header {
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: bold;
+            font-size: 24px;
+            color: #c00;
+            text-decoration: none;
+        }
+
+        .back-btn {
+            padding: 10px 20px;
+            background: #222222;
+            border: 1px solid #333333;
+            color: #e0e0e0;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.2s, border-color 0.3s, color 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        body.light-mode .back-btn {
+            background: #f0f0f0;
+            border: 1px solid #d0d0d0;
+            color: #333;
+        }
+
+        .back-btn:hover {
+            background: #2a2a2a;
+        }
+
+        body.light-mode .back-btn:hover {
+            background: #e0e0e0;
+        }
+
+        /* Content */
+        .privacy-content {
+            background: #111111;
+            border-radius: 12px;
+            padding: 40px;
+            border: 1px solid #222222;
+            margin-bottom: 30px;
+            transition: background 0.3s, border-color 0.3s;
+        }
+
+        body.light-mode .privacy-content {
+            background: #ffffff;
+            border: 1px solid #e0e0e0;
+        }
+
+        .privacy-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .privacy-title {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: #e0e0e0;
+            transition: color 0.3s;
+        }
+
+        body.light-mode .privacy-title {
+            color: #333;
+        }
+
+        .privacy-subtitle {
+            font-size: 18px;
+            color: #888;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .last-updated {
+            text-align: center;
+            color: #c00;
+            font-weight: 600;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        /* Sections */
+        .section {
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #e0e0e0;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #c00;
+            transition: color 0.3s;
+        }
+
+        body.light-mode .section-title {
+            color: #333;
+        }
+
+        .section-content {
+            color: #b0b0b0;
+            transition: color 0.3s;
+        }
+
+        body.light-mode .section-content {
+            color: #666;
+        }
+
+        .section-content p {
+            margin-bottom: 15px;
+        }
+
+        .section-content ul {
+            margin: 15px 0;
+            padding-left: 20px;
+        }
+
+        .section-content li {
+            margin-bottom: 8px;
+            position: relative;
+        }
+
+        .section-content li:before {
+            content: "•";
+            color: #c00;
+            font-weight: bold;
+            position: absolute;
+            left: -15px;
+        }
+
+        /* Table */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: #222222;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        body.light-mode .data-table {
+            background: #f0f0f0;
+        }
+
+        .data-table th {
+            background: #c00;
+            color: white;
+            padding: 12px 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .data-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #333333;
+            transition: border-color 0.3s;
+        }
+
+        body.light-mode .data-table td {
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .data-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* Contact Section */
+        .contact-section {
+            background: #222222;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 30px;
+            transition: background 0.3s;
+        }
+
+        body.light-mode .contact-section {
+            background: #f0f0f0;
+        }
+
+        .contact-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #e0e0e0;
+            transition: color 0.3s;
+        }
+
+        body.light-mode .contact-title {
+            color: #333;
+        }
+
+        .contact-info {
+            color: #b0b0b0;
+            transition: color 0.3s;
+        }
+
+        body.light-mode .contact-info {
+            color: #666;
+        }
+
+        .contact-email {
+            color: #c00;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .contact-email:hover {
+            text-decoration: underline;
+        }
+
+        /* Theme Toggle */
+        .theme-toggle {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #222222;
+            border: 1px solid #333333;
+            color: #e0e0e0;
+            padding: 10px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.3s, border-color 0.3s, color 0.3s;
+            z-index: 100;
+        }
+
+        body.light-mode .theme-toggle {
+            background: #f0f0f0;
+            border: 1px solid #d0d0d0;
+            color: #333;
+        }
+
+        .theme-toggle:hover {
+            background: #2a2a2a;
+        }
+
+        body.light-mode .theme-toggle:hover {
+            background: #e0e0e0;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #111111;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #c00;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #ff4d4d;
+        }
+
+        body.light-mode ::-webkit-scrollbar-track {
+            background: #f0f0f0;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 20px 0;
+            color: #888;
+            font-size: 14px;
+            border-top: 1px solid #222222;
+            margin-top: 40px;
+            transition: color 0.3s, border-color 0.3s;
+        }
+
+        body.light-mode .footer {
+            border-top: 1px solid #e0e0e0;
+            color: #666;
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+
+            .privacy-content {
+                padding: 20px;
+            }
+
+            .privacy-title {
+                font-size: 24px;
+            }
+
+            .privacy-subtitle {
+                font-size: 16px;
+            }
+
+            .header {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+
+            .data-table {
+                display: block;
+                overflow-x: auto;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .privacy-content {
+                padding: 15px;
+            }
+
+            .section-title {
+                font-size: 18px;
+            }
+
+            .data-table th,
+            .data-table td {
+                padding: 8px 10px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <a href="index.html" class="logo">DARK AI</a>
+            <a href="settings.html" class="back-btn">← Back to Settings</a>
+        </div>
+
+        <!-- Privacy Content -->
+        <div class="privacy-content">
+            <div class="privacy-header">
+                <h1 class="privacy-title">Privacy Policy</h1>
+                <p class="privacy-subtitle">Your privacy is important to us. This policy explains how we collect, use, and protect your information.</p>
+            </div>
+
+            <div class="last-updated">Last Updated: March 15, 2024</div>
+
+            <!-- Introduction -->
+            <div class="section">
+                <h2 class="section-title">1. Introduction</h2>
+                <div class="section-content">
+                    <p>Welcome to Dark AI. We are committed to protecting your privacy and ensuring transparency about how we handle your personal information. This Privacy Policy explains what data we collect, why we collect it, and how we use it.</p>
+                    <p>By using Dark AI services, you agree to the collection and use of information in accordance with this policy.</p>
+                </div>
+            </div>
+
+            <!-- Information We Collect -->
+            <div class="section">
+                <h2 class="section-title">2. Information We Collect</h2>
+                <div class="section-content">
+                    <p>We collect several types of information to provide and improve our services:</p>
+                    
+                    <h3 style="margin: 15px 0 10px 0; color: #e0e0e0;">Personal Information</h3>
+                    <ul>
+                        <li>Account information (email, username, profile details)</li>
+                        <li>Contact information when you reach out for support</li>
+                        <li>Payment information for premium subscriptions</li>
+                    </ul>
+
+                    <h3 style="margin: 15px 0 10px 0; color: #e0e0e0;">Usage Data</h3>
+                    <ul>
+                        <li>Chat conversations and interactions with Dark AI</li>
+                        <li>Feature usage patterns and preferences</li>
+                        <li>Device information and browser type</li>
+                        <li>IP address and general location data</li>
+                    </ul>
+
+                    <h3 style="margin: 15px 0 10px 0; color: #e0e0e0;">Technical Information</h3>
+                    <ul>
+                        <li>Cookies and similar tracking technologies</li>
+                        <li>Log files and error reports</li>
+                        <li>Performance metrics and service usage data</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- How We Use Your Information -->
+            <div class="section">
+                <h2 class="section-title">3. How We Use Your Information</h2>
+                <div class="section-content">
+                    <p>We use the collected information for various purposes:</p>
+                    
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Purpose</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Service Provision</td>
+                                <td>To provide, maintain, and improve our AI services</td>
+                            </tr>
+                            <tr>
+                                <td>Personalization</td>
+                                <td>To customize your experience and preferences</td>
+                            </tr>
+                            <tr>
+                                <td>Communication</td>
+                                <td>To send important updates and respond to inquiries</td>
+                            </tr>
+                            <tr>
+                                <td>Security</td>
+                                <td>To protect against fraud and ensure service security</td>
+                            </tr>
+                            <tr>
+                                <td>Analytics</td>
+                                <td>To understand usage patterns and improve services</td>
+                            </tr>
+                            <tr>
+                                <td>Legal Compliance</td>
+                                <td>To comply with legal obligations and regulations</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Data Sharing and Disclosure -->
+            <div class="section">
+                <h2 class="section-title">4. Data Sharing and Disclosure</h2>
+                <div class="section-content">
+                    <p>We do not sell your personal information to third parties. We may share your information in the following circumstances:</p>
+                    
+                    <ul>
+                        <li><strong>Service Providers:</strong> With trusted partners who help us operate our services (e.g., hosting, payment processing)</li>
+                        <li><strong>Legal Requirements:</strong> When required by law or to protect our rights and safety</li>
+                        <li><strong>Business Transfers:</strong> In connection with a merger, acquisition, or sale of assets</li>
+                        <li><strong>Consent:</strong> When you give us explicit permission to share specific information</li>
+                    </ul>
+
+                    <p>All third-party service providers are required to maintain the confidentiality and security of your information.</p>
+                </div>
+            </div>
+
+            <!-- Data Security -->
+            <div class="section">
+                <h2 class="section-title">5. Data Security</h2>
+                <div class="section-content">
+                    <p>We implement appropriate security measures to protect your personal information:</p>
+                    
+                    <ul>
+                        <li>Encryption of data in transit and at rest</li>
+                        <li>Regular security assessments and updates</li>
+                        <li>Access controls and authentication mechanisms</li>
+                        <li>Secure data storage and backup procedures</li>
+                    </ul>
+
+                    <p>While we strive to use commercially acceptable means to protect your information, no method of transmission over the Internet or electronic storage is 100% secure.</p>
+                </div>
+            </div>
+
+            <!-- Your Rights -->
+            <div class="section">
+                <h2 class="section-title">6. Your Rights and Choices</h2>
+                <div class="section-content">
+                    <p>You have the following rights regarding your personal information:</p>
+                    
+                    <ul>
+                        <li><strong>Access:</strong> Request a copy of the personal information we hold about you</li>
+                        <li><strong>Correction:</strong> Update or correct inaccurate information</li>
+                        <li><strong>Deletion:</strong> Request deletion of your personal information</li>
+                        <li><strong>Restriction:</strong> Limit how we use your information</li>
+                        <li><strong>Portability:</strong> Receive your data in a structured format</li>
+                        <li><strong>Objection:</strong> Object to certain processing activities</li>
+                    </ul>
+
+                    <p>To exercise these rights, please contact us using the information below.</p>
+                </div>
+            </div>
+
+            <!-- Data Retention -->
+            <div class="section">
+                <h2 class="section-title">7. Data Retention</h2>
+                <div class="section-content">
+                    <p>We retain your personal information only for as long as necessary to fulfill the purposes outlined in this policy, unless a longer retention period is required or permitted by law.</p>
+                    
+                    <ul>
+                        <li>Account data: Retained while your account is active</li>
+                        <li>Chat history: Stored according to your preferences (default: 30 days)</li>
+                        <li>Payment information: Retained as required by financial regulations</li>
+                        <li>Analytics data: Anonymized after 12 months</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- International Transfers -->
+            <div class="section">
+                <h2 class="section-title">8. International Data Transfers</h2>
+                <div class="section-content">
+                    <p>Your information may be transferred to and processed in countries other than your own. We ensure appropriate safeguards are in place to protect your data during these transfers, including:</p>
+                    
+                    <ul>
+                        <li>Standard contractual clauses approved by regulatory authorities</li>
+                        <li>Adequacy decisions for countries with approved data protection standards</li>
+                        <li>Binding corporate rules for intra-organizational transfers</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Children's Privacy -->
+            <div class="section">
+                <h2 class="section-title">9. Children's Privacy</h2>
+                <div class="section-content">
+                    <p>Our services are not directed to individuals under the age of 16. We do not knowingly collect personal information from children under 16.</p>
+                    <p>If you become aware that a child has provided us with personal information, please contact us immediately. We will take steps to remove such information and terminate the child's account.</p>
+                </div>
+            </div>
+
+            <!-- Changes to This Policy -->
+            <div class="section">
+                <h2 class="section-title">10. Changes to This Policy</h2>
+                <div class="section-content">
+                    <p>We may update this Privacy Policy from time to time. We will notify you of any changes by posting the new policy on this page and updating the "Last Updated" date.</p>
+                    <p>We encourage you to review this policy periodically for any changes. Continued use of our services after changes constitute acceptance of the updated policy.</p>
+                </div>
+            </div>
+
+            <!-- Contact Information -->
+            <div class="contact-section">
+                <h3 class="contact-title">Contact Us</h3>
+                <div class="contact-info">
+                    <p>If you have any questions about this Privacy Policy or our data practices, please contact us:</p>
+                    <p>Email: <a href="mailto:privacy@darkai.com" class="contact-email">privacy@darkai.com</a></p>
+                    <p>Data Protection Officer: <a href="mailto:dpo@darkai.com" class="contact-email">dpo@darkai.com</a></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p>&copy; 2024 Dark AI. All rights reserved.</p>
+        </div>
+    </div>
+
+    <!-- Theme Toggle -->
+    <button class="theme-toggle" onclick="toggleTheme()">Toggle Theme</button>
+
+    <script>
+        // Theme toggle functionality
+        function toggleTheme() {
+            document.body.classList.toggle('light-mode');
+            const isLightMode = document.body.classList.contains('light-mode');
+            localStorage.setItem('dark-theme', isLightMode ? 'light' : 'dark');
+        }
+
+        // Initialize theme from localStorage
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedTheme = localStorage.getItem('dark-theme') || 'dark';
+            if (savedTheme === 'light') {
+                document.body.classList.add('light-mode');
+            }
+        });
+
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

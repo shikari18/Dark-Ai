@@ -1,0 +1,2097 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings - Dark AI</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            user-select: none;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: #000000;
+            color: #e0e0e0;
+            min-height: 100vh;
+            overflow-x: hidden;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        body.light-mode {
+            background: #f5f5f5;
+            color: #333;
+        }
+
+        /* Header */
+        .header {
+            background: #111111;
+            border-bottom: 1px solid #222222;
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: background 0.3s, border-color 0.3s;
+            position: relative;
+        }
+
+        body.light-mode .header {
+            background: #ffffff;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: bold;
+            font-size: 18px;
+            color: #e0e0e0;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        body.light-mode .logo {
+            color: #333;
+        }
+
+        .logo-img {
+            height: 32px;
+            width: auto;
+            border-radius: 50%;
+        }
+
+        .back-btn {
+            background: #222222;
+            border: 1px solid #333333;
+            color: #e0e0e0;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.2s, border-color 0.3s, color 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        body.light-mode .back-btn {
+            background: #f0f0f0;
+            border: 1px solid #d0d0d0;
+            color: #333;
+        }
+
+        .back-btn:hover {
+            background: #2a2a2a;
+        }
+
+        body.light-mode .back-btn:hover {
+            background: #e0e0e0;
+        }
+
+        /* Mobile Menu Toggle */
+        .mobile-menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: #e0e0e0;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 5px;
+            transition: color 0.3s;
+        }
+
+        body.light-mode .mobile-menu-toggle {
+            color: #333;
+        }
+
+        /* Main Content */
+        .main-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+
+        .page-title {
+            font-size: 32px;
+            margin-bottom: 10px;
+            color: #e0e0e0;
+            transition: color 0.3s;
+        }
+
+        body.light-mode .page-title {
+            color: #333;
+        }
+
+        .page-subtitle {
+            color: #888;
+            margin-bottom: 30px;
+            font-size: 16px;
+            transition: color 0.3s;
+        }
+
+        body.light-mode .page-subtitle {
+            color: #666;
+        }
+
+        /* Settings Layout */
+        .settings-layout {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 30px;
+        }
+
+        @media (max-width: 768px) {
+            .settings-layout {
+                grid-template-columns: 1fr;
+            }
+            
+            .mobile-menu-toggle {
+                display: block;
+            }
+            
+            .settings-sidebar {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 280px;
+                height: 100vh;
+                background: #111111;
+                z-index: 1000;
+                padding: 20px;
+                overflow-y: auto;
+                box-shadow: 2px 0 10px rgba(0,0,0,0.5);
+            }
+            
+            .settings-sidebar.active {
+                display: block;
+            }
+            
+            .sidebar-overlay {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0,0,0,0.5);
+                z-index: 999;
+            }
+            
+            .sidebar-overlay.active {
+                display: block;
+            }
+        }
+
+        /* Settings Sidebar */
+        .settings-sidebar {
+            background: #111111;
+            border-radius: 12px;
+            border: 1px solid #222222;
+            padding: 20px;
+            height: fit-content;
+            transition: background 0.3s, border-color 0.3s;
+        }
+
+        body.light-mode .settings-sidebar {
+            background: #ffffff;
+            border: 1px solid #e0e0e0;
+        }
+
+        .sidebar-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #e0e0e0;
+            transition: color 0.3s;
+        }
+
+        body.light-mode .sidebar-title {
+            color: #333;
+        }
+
+        .sidebar-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .nav-item {
+            padding: 12px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.2s, color 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #b0b0b0;
+        }
+
+        body.light-mode .nav-item {
+            color: #666;
+        }
+
+        .nav-item:hover {
+            background: #222222;
+            color: #e0e0e0;
+        }
+
+        body.light-mode .nav-item:hover {
+            background: #f0f0f0;
+            color: #333;
+        }
+
+        .nav-item.active {
+            background: #c00;
+            color: white;
+        }
+
+        .nav-icon {
+            width: 20px;
+            text-align: center;
+        }
+
+        /* Settings Content */
+        .settings-content {
+            background: #111111;
+            border-radius: 12px;
+            border: 1px solid #222222;
+            padding: 30px;
+            transition: background 0.3s, border-color 0.3s;
+            max-height: 70vh;
+            overflow-y: auto;
+        }
+
+        body.light-mode .settings-content {
+            background: #ffffff;
+            border: 1px solid #e0e0e0;
+        }
+
+        .content-section {
+            display: none;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        .section-title {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #e0e0e0;
+            transition: color 0.3s;
+        }
+
+        body.light-mode .section-title {
+            color: #333;
+        }
+
+        .section-description {
+            color: #888;
+            margin-bottom: 25px;
+            line-height: 1.5;
+            transition: color 0.3s;
+        }
+
+        body.light-mode .section-description {
+            color: #666;
+        }
+
+        /* Settings Cards */
+        .settings-cards {
+            display: grid;
+            gap: 20px;
+        }
+
+        .settings-card {
+            background: #222222;
+            border-radius: 8px;
+            padding: 20px;
+            border: 1px solid #333333;
+            transition: background 0.3s, border-color 0.3s;
+        }
+
+        body.light-mode .settings-card {
+            background: #f0f0f0;
+            border: 1px solid #e0e0e0;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #e0e0e0;
+            transition: color 0.3s;
+        }
+
+        body.light-mode .card-title {
+            color: #333;
+        }
+
+        .card-description {
+            color: #b0b0b0;
+            margin-bottom: 15px;
+            line-height: 1.5;
+            transition: color 0.3s;
+        }
+
+        body.light-mode .card-description {
+            color: #666;
+        }
+
+        /* Form Elements */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #e0e0e0;
+            transition: color 0.3s;
+        }
+
+        body.light-mode .form-label {
+            color: #333;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px 16px;
+            background: #333333;
+            border: 1px solid #444444;
+            border-radius: 6px;
+            color: #e0e0e0;
+            font-size: 14px;
+            transition: border-color 0.3s, background 0.3s;
+        }
+
+        body.light-mode .form-input {
+            background: #f0f0f0;
+            border: 1px solid #d0d0d0;
+            color: #333;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #c00;
+            background: #3a3a3a;
+        }
+
+        body.light-mode .form-input:focus {
+            background: #ffffff;
+            border-color: #c00;
+        }
+
+        .form-select {
+            width: 100%;
+            padding: 12px 16px;
+            background: #333333;
+            border: 1px solid #444444;
+            border-radius: 6px;
+            color: #e0e0e0;
+            font-size: 14px;
+            transition: border-color 0.3s, background 0.3s;
+            cursor: pointer;
+        }
+
+        body.light-mode .form-select {
+            background: #f0f0f0;
+            border: 1px solid #d0d0d0;
+            color: #333;
+        }
+
+        .form-select:focus {
+            outline: none;
+            border-color: #c00;
+            background: #3a3a3a;
+        }
+
+        body.light-mode .form-select:focus {
+            background: #ffffff;
+            border-color: #c00;
+        }
+
+        /* Toggle Switch */
+        .toggle-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .toggle-label {
+            flex: 1;
+        }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #333333;
+            transition: .4s;
+            border-radius: 24px;
+        }
+
+        body.light-mode .toggle-slider {
+            background-color: #d0d0d0;
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .toggle-slider {
+            background-color: #c00;
+        }
+
+        input:checked + .toggle-slider:before {
+            transform: translateX(26px);
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+        }
+
+        .btn-primary {
+            background: #c00;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #ff4d4d;
+        }
+
+        .btn-secondary {
+            background: #333333;
+            color: #e0e0e0;
+            border: 1px solid #444444;
+        }
+
+        body.light-mode .btn-secondary {
+            background: #f0f0f0;
+            color: #333;
+            border: 1px solid #d0d0d0;
+        }
+
+        .btn-secondary:hover {
+            background: #3a3a3a;
+        }
+
+        body.light-mode .btn-secondary:hover {
+            background: #e0e0e0;
+        }
+
+        .btn-danger {
+            background: #c00;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #ff4d4d;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        /* Theme Preview */
+        .theme-preview {
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .theme-option {
+            width: 80px;
+            height: 60px;
+            border-radius: 8px;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: border 0.2s;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .theme-option:hover {
+            border: 2px solid #c00;
+        }
+
+        .theme-option.active {
+            border: 2px solid #c00;
+        }
+
+        .theme-dark {
+            background: linear-gradient(135deg, #000000 50%, #c00 50%);
+        }
+
+        .theme-light {
+            background: linear-gradient(135deg, #f5f5f5 50%, #c00 50%);
+        }
+
+        .theme-blue {
+            background: linear-gradient(135deg, #000033 50%, #c00 50%);
+        }
+
+        /* Profile Section */
+        .profile-section {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .profile-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #c00;
+        }
+
+        .profile-info {
+            flex: 1;
+        }
+
+        .profile-name {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: #e0e0e0;
+            transition: color 0.3s;
+        }
+
+        body.light-mode .profile-name {
+            color: #333;
+        }
+
+        .profile-email {
+            color: #888;
+            font-size: 14px;
+            transition: color 0.3s;
+        }
+
+        body.light-mode .profile-email {
+            color: #666;
+        }
+
+        .avatar-upload {
+            margin-top: 10px;
+        }
+
+        /* Subscription Section */
+        .subscription-card {
+            background: linear-gradient(135deg, #222222 0%, #2a1a1a 100%);
+            border-radius: 12px;
+            padding: 25px;
+            border: 1px solid #333333;
+            margin-bottom: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        body.light-mode .subscription-card {
+            background: linear-gradient(135deg, #f0f0f0 0%, #ffe6e6 100%);
+            border: 1px solid #e0e0e0;
+        }
+
+        .subscription-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: #c00;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .subscription-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #e0e0e0;
+            transition: color 0.3s;
+        }
+
+        body.light-mode .subscription-title {
+            color: #333;
+        }
+
+        .subscription-price {
+            font-size: 32px;
+            font-weight: 700;
+            color: #c00;
+            margin-bottom: 15px;
+        }
+
+        .subscription-features {
+            margin-bottom: 20px;
+        }
+
+        .subscription-feature {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: #b0b0b0;
+            transition: color 0.3s;
+        }
+
+        body.light-mode .subscription-feature {
+            color: #666;
+        }
+
+        .subscription-feature-icon {
+            color: #c00;
+            margin-right: 8px;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 20px 0;
+            color: #888;
+            font-size: 14px;
+            border-top: 1px solid #222222;
+            margin-top: 40px;
+            transition: color 0.3s, border-color 0.3s;
+        }
+
+        body.light-mode .footer {
+            border-top: 1px solid #e0e0e0;
+            color: #666;
+        }
+
+        /* Premium Feature Cards */
+        .premium-feature-card {
+            background: linear-gradient(135deg, #222222 0%, #1a1a2a 100%);
+            border-radius: 12px;
+            padding: 25px;
+            border: 1px solid #333333;
+            margin-bottom: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        body.light-mode .premium-feature-card {
+            background: linear-gradient(135deg, #f0f0f0 0%, #e6e6ff 100%);
+            border: 1px solid #e0e0e0;
+        }
+
+        .premium-feature-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #e0e0e0;
+            transition: color 0.3s;
+        }
+
+        body.light-mode .premium-feature-title {
+            color: #333;
+        }
+
+        .premium-feature-description {
+            color: #b0b0b0;
+            margin-bottom: 15px;
+            line-height: 1.5;
+            transition: color 0.3s;
+        }
+
+        body.light-mode .premium-feature-description {
+            color: #666;
+        }
+
+        .premium-lock {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            color: #c00;
+            font-size: 20px;
+        }
+
+        /* Payment Modal */
+        .payment-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .payment-modal.active {
+            display: flex;
+        }
+
+        .payment-content {
+            background: #111111;
+            padding: 30px;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 500px;
+            border: 1px solid #333333;
+            transition: background 0.3s, border-color 0.3s;
+            position: relative;
+        }
+
+        body.light-mode .payment-content {
+            background: #ffffff;
+            border: 1px solid #d0d0d0;
+        }
+
+        .payment-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .payment-subtitle {
+            font-size: 16px;
+            color: #888;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .payment-price {
+            font-size: 48px;
+            font-weight: 700;
+            color: #c00;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .payment-features {
+            margin-bottom: 30px;
+        }
+
+        .payment-feature {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            font-size: 14px;
+            color: #e0e0e0;
+        }
+
+        .payment-feature-icon {
+            color: #c00;
+            margin-right: 10px;
+            font-size: 16px;
+        }
+
+        .card-details {
+            background: #222222;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .card-row {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .card-row .form-group {
+            flex: 1;
+            margin-bottom: 0;
+        }
+
+        .payment-button {
+            width: 100%;
+            padding: 14px;
+            background: #c00;
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .payment-button:hover {
+            background: #ff4d4d;
+        }
+
+        .payment-success {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .payment-success.active {
+            display: block;
+        }
+
+        .success-icon {
+            font-size: 48px;
+            color: #4caf50;
+            margin-bottom: 15px;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: #888;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 0;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: color 0.3s;
+            position: absolute;
+            top: 15px;
+            right: 15px;
+        }
+
+        .modal-close:hover {
+            color: #e0e0e0;
+        }
+
+        body.light-mode .modal-close:hover {
+            color: #333;
+        }
+
+        .subscription-options {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .subscription-option {
+            flex: 1;
+            padding: 15px;
+            background: #222222;
+            border: 1px solid #333333;
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .subscription-option:hover {
+            background: #2a2a2a;
+        }
+
+        .subscription-option.active {
+            background: #c00;
+            border-color: #c00;
+        }
+
+        .subscription-option-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .subscription-option-price {
+            font-size: 18px;
+            font-weight: 700;
+            color: #c00;
+        }
+
+        .subscription-option.active .subscription-option-price {
+            color: white;
+        }
+
+        .subscription-option-savings {
+            font-size: 12px;
+            color: #888;
+            margin-top: 5px;
+        }
+
+        .subscription-option.active .subscription-option-savings {
+            color: #ffcccc;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .main-content {
+                padding: 20px 15px;
+            }
+
+            .page-title {
+                font-size: 24px;
+            }
+
+            .settings-content {
+                padding: 20px;
+            }
+
+            .profile-section {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .subscription-options {
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header {
+                padding: 12px 15px;
+            }
+
+            .settings-content {
+                padding: 15px;
+            }
+
+            .btn-group {
+                flex-direction: column;
+            }
+
+            .theme-preview {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .theme-option {
+                width: 100%;
+                max-width: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="logo">
+            <img src="mylogo.jpg" alt="Dark Logo" class="logo-img" />
+            <span>DARK</span>
+        </div>
+        <button class="mobile-menu-toggle" id="mobileMenuToggle">☰</button>
+        <a href="index.html" class="back-btn">← Back to Chat</a>
+    </header>
+
+    <!-- Mobile Sidebar Overlay -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <h1 class="page-title">Settings</h1>
+        <p class="page-subtitle">Customize your Dark AI experience</p>
+
+        <div class="settings-layout">
+            <!-- Settings Sidebar -->
+            <div class="settings-sidebar" id="settingsSidebar">
+                <h2 class="sidebar-title">Preferences</h2>
+                <div class="sidebar-nav">
+                    <div class="nav-item active" data-section="general">
+                        <span class="nav-icon">⚙️</span>
+                        <span>General</span>
+                    </div>
+                    <div class="nav-item" data-section="appearance">
+                        <span class="nav-icon">🎨</span>
+                        <span>Appearance</span>
+                    </div>
+                    <div class="nav-item" data-section="account">
+                        <span class="nav-icon">👤</span>
+                        <span>Account</span>
+                    </div>
+                    <div class="nav-item" data-section="premium">
+                        <span class="nav-icon">💎</span>
+                        <span>Premium Features</span>
+                    </div>
+                    <div class="nav-item" data-section="privacy">
+                        <span class="nav-icon">🔒</span>
+                        <span>Privacy & Security</span>
+                    </div>
+                    <div class="nav-item" data-section="notifications">
+                        <span class="nav-icon">🔔</span>
+                        <span>Notifications</span>
+                    </div>
+                    <div class="nav-item" data-section="subscription">
+                        <span class="nav-icon">💳</span>
+                        <span>Subscription</span>
+                    </div>
+                    <div class="nav-item" data-section="about">
+                        <span class="nav-icon">ℹ️</span>
+                        <span>About</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Settings Content -->
+            <div class="settings-content">
+                <!-- General Settings -->
+                <div class="content-section active" id="general-section">
+                    <h2 class="section-title">General Settings</h2>
+                    <p class="section-description">Configure your basic Dark AI preferences and behavior.</p>
+
+                    <div class="settings-cards">
+                        <div class="settings-card">
+                            <div class="card-header">
+                                <h3 class="card-title">Language & Region</h3>
+                            </div>
+                            <p class="card-description">Choose your preferred language and regional settings.</p>
+                            <div class="form-group">
+                                <label class="form-label">Language</label>
+                                <select class="form-select" id="languageSelect">
+                                    <option value="en">English</option>
+                                    <option value="es">Español</option>
+                                    <option value="fr">Français</option>
+                                    <option value="de">Deutsch</option>
+                                    <option value="ja">日本語</option>
+                                    <option value="zh">中文</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Time Zone</label>
+                                <select class="form-select" id="timezoneSelect">
+                                    <option value="auto">Auto-detect</option>
+                                    <option value="est">Eastern Time (ET)</option>
+                                    <option value="cst">Central Time (CT)</option>
+                                    <option value="mst">Mountain Time (MT)</option>
+                                    <option value="pst">Pacific Time (PT)</option>
+                                    <option value="gmt">Greenwich Mean Time (GMT)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="settings-card">
+                            <div class="card-header">
+                                <h3 class="card-title">Chat Behavior</h3>
+                            </div>
+                            <p class="card-description">Customize how Dark AI interacts with you.</p>
+                            <div class="form-group">
+                                <div class="toggle-container">
+                                    <div class="toggle-label">
+                                        <strong>Auto-scroll to new messages</strong>
+                                        <p style="font-size: 12px; color: #888; margin-top: 3px;">Automatically scroll to new messages in chat</p>
+                                    </div>
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" checked>
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="toggle-container">
+                                    <div class="toggle-label">
+                                        <strong>Show typing indicator</strong>
+                                        <p style="font-size: 12px; color: #888; margin-top: 3px;">Show when Dark AI is typing a response</p>
+                                    </div>
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" checked>
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="settings-card">
+                            <div class="card-header">
+                                <h3 class="card-title">Voice Settings</h3>
+                            </div>
+                            <p class="card-description">Configure voice interaction preferences.</p>
+                            <div class="form-group">
+                                <label class="form-label">Default Voice</label>
+                                <select class="form-select" id="voiceSelect">
+                                    <option value="sarah">Sarah (Female)</option>
+                                    <option value="michael">Michael (Male)</option>
+                                    <option value="sofia">Sofia (Female)</option>
+                                    <option value="mike">Mike (Male)</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <div class="toggle-container">
+                                    <div class="toggle-label">
+                                        <strong>Enable voice commands</strong>
+                                        <p style="font-size: 12px; color: #888; margin-top: 3px;">Allow voice interaction with Dark AI</p>
+                                    </div>
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" checked>
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Appearance Settings -->
+                <div class="content-section" id="appearance-section">
+                    <h2 class="section-title">Appearance</h2>
+                    <p class="section-description">Customize the look and feel of Dark AI.</p>
+
+                    <div class="settings-cards">
+                        <div class="settings-card">
+                            <div class="card-header">
+                                <h3 class="card-title">Theme</h3>
+                            </div>
+                            <p class="card-description">Choose your preferred color theme.</p>
+                            <div class="theme-preview">
+                                <div class="theme-option theme-dark active" data-theme="dark">
+                                    <div style="position: absolute; bottom: 5px; left: 5px; color: white; font-size: 10px;">Dark</div>
+                                </div>
+                                <div class="theme-option theme-light" data-theme="light">
+                                    <div style="position: absolute; bottom: 5px; left: 5px; color: black; font-size: 10px;">Light</div>
+                                </div>
+                                <div class="theme-option theme-blue" data-theme="blue">
+                                    <div style="position: absolute; bottom: 5px; left: 5px; color: white; font-size: 10px;">Blue</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="settings-card">
+                            <div class="card-header">
+                                <h3 class="card-title">Font & Display</h3>
+                            </div>
+                            <p class="card-description">Adjust text size and display preferences.</p>
+                            <div class="form-group">
+                                <label class="form-label">Font Size</label>
+                                <select class="form-select" id="fontSizeSelect">
+                                    <option value="small">Small</option>
+                                    <option value="medium" selected>Medium</option>
+                                    <option value="large">Large</option>
+                                    <option value="xlarge">Extra Large</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Chat Density</label>
+                                <select class="form-select" id="chatDensitySelect">
+                                    <option value="compact">Compact</option>
+                                    <option value="comfortable" selected>Comfortable</option>
+                                    <option value="spacious">Spacious</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Account Settings -->
+                <div class="content-section" id="account-section">
+                    <h2 class="section-title">Account</h2>
+                    <p class="section-description">Manage your account information and preferences.</p>
+
+                    <div class="settings-cards">
+                        <div class="profile-section">
+                            <img src="mylogo.jpg" alt="Profile" class="profile-avatar" id="profileAvatar">
+                            <div class="profile-info">
+                                <h3 class="profile-name" id="profileName">User Name</h3>
+                                <p class="profile-email" id="profileEmail">user@example.com</p>
+                                <div class="avatar-upload">
+                                    <input type="file" id="avatarUpload" accept="image/*" style="display: none;">
+                                    <button class="btn btn-secondary" onclick="document.getElementById('avatarUpload').click()">Change Avatar</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="settings-card">
+                            <div class="card-header">
+                                <h3 class="card-title">Profile Information</h3>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Username</label>
+                                <input type="text" class="form-input" id="usernameInput" placeholder="Enter your username" maxlength="12">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Email Address</label>
+                                <p class="profile-email" style="padding: 12px 0;" id="emailDisplay">user@example.com</p>
+                            </div>
+                            <div class="btn-group">
+                                <button class="btn btn-primary" onclick="saveProfile()">Save Changes</button>
+                            </div>
+                        </div>
+
+                        <div class="settings-card">
+                            <div class="card-header">
+                                <h3 class="card-title">Password</h3>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Current Password</label>
+                                <input type="password" class="form-input" id="currentPassword" placeholder="Enter current password">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">New Password</label>
+                                <input type="password" class="form-input" id="newPassword" placeholder="Enter new password">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Confirm New Password</label>
+                                <input type="password" class="form-input" id="confirmPassword" placeholder="Confirm new password">
+                            </div>
+                            <div class="btn-group">
+                                <button class="btn btn-primary" onclick="changePassword()">Change Password</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Premium Features Section -->
+                <div class="content-section" id="premium-section">
+                    <h2 class="section-title">Premium Features</h2>
+                    <p class="section-description">Unlock powerful features with Dark AI Premium.</p>
+
+                    <div class="settings-cards">
+                        <div class="premium-feature-card">
+                            <div class="premium-lock">🔒</div>
+                            <h3 class="premium-feature-title">AI Image Generation</h3>
+                            <p class="premium-feature-description">Generate unlimited high-quality images from text descriptions using advanced AI models.</p>
+                            <button class="btn btn-primary" onclick="upgradeForFeature('AI Image Generation')">Upgrade to Unlock</button>
+                        </div>
+
+                        <div class="premium-feature-card">
+                            <div class="premium-lock">🔒</div>
+                            <h3 class="premium-feature-title">Advanced Hacking Tools</h3>
+                            <p class="premium-feature-description">Access penetration testing tools, vulnerability scanners, and security analysis utilities.</p>
+                            <button class="btn btn-primary" onclick="upgradeForFeature('Advanced Hacking Tools')">Upgrade to Unlock</button>
+                        </div>
+
+                        <div class="premium-feature-card">
+                            <div class="premium-lock">🔒</div>
+                            <h3 class="premium-feature-title">Website Hosting & Management</h3>
+                            <p class="premium-feature-description">Host and manage your websites with our integrated hosting platform and management tools.</p>
+                            <button class="btn btn-primary" onclick="upgradeForFeature('Website Hosting')">Upgrade to Unlock</button>
+                        </div>
+
+                        <div class="premium-feature-card">
+                            <div class="premium-lock">🔒</div>
+                            <h3 class="premium-feature-title">Priority AI Assistant</h3>
+                            <p class="premium-feature-description">Get faster response times and priority access to our AI assistant during peak hours.</p>
+                            <button class="btn btn-primary" onclick="upgradeForFeature('Priority AI Assistant')">Upgrade to Unlock</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Privacy & Security Settings -->
+                <div class="content-section" id="privacy-section">
+                    <h2 class="section-title">Privacy & Security</h2>
+                    <p class="section-description">Control your privacy and security settings.</p>
+
+                    <div class="settings-cards">
+                        <div class="settings-card">
+                            <div class="card-header">
+                                <h3 class="card-title">Data & Privacy</h3>
+                            </div>
+                            <div class="form-group">
+                                <div class="toggle-container">
+                                    <div class="toggle-label">
+                                        <strong>Save chat history</strong>
+                                        <p style="font-size: 12px; color: #888; margin-top: 3px;">Store your conversations for future reference</p>
+                                    </div>
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" checked>
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="toggle-container">
+                                    <div class="toggle-label">
+                                        <strong>Allow data collection for improvement</strong>
+                                        <p style="font-size: 12px; color: #888; margin-top: 3px;">Help improve Dark AI by sharing anonymous usage data</p>
+                                    </div>
+                                    <label class="toggle-switch">
+                                        <input type="checkbox">
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="btn-group">
+                                <button class="btn btn-secondary" onclick="clearChatHistory()">Clear Chat History</button>
+                                <button class="btn btn-secondary" onclick="exportData()">Export My Data</button>
+                            </div>
+                        </div>
+
+                        <div class="settings-card">
+                            <div class="card-header">
+                                <h3 class="card-title">Security</h3>
+                            </div>
+                            <div class="form-group">
+                                <div class="toggle-container">
+                                    <div class="toggle-label">
+                                        <strong>Two-factor authentication</strong>
+                                        <p style="font-size: 12px; color: #888; margin-top: 3px;">Add an extra layer of security to your account</p>
+                                    </div>
+                                    <label class="toggle-switch">
+                                        <input type="checkbox">
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="toggle-container">
+                                    <div class="toggle-label">
+                                        <strong>Login notifications</strong>
+                                        <p style="font-size: 12px; color: #888; margin-top: 3px;">Get notified when someone logs into your account</p>
+                                    </div>
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" checked>
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="btn-group">
+                                <button class="btn btn-secondary" onclick="viewActiveSessions()">Active Sessions</button>
+                                <button class="btn btn-secondary" onclick="viewPrivacyPolicy()">Privacy Policy</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Notification Settings -->
+                <div class="content-section" id="notifications-section">
+                    <h2 class="section-title">Notifications</h2>
+                    <p class="section-description">Manage how and when you receive notifications.</p>
+
+                    <div class="settings-cards">
+                        <div class="settings-card">
+                            <div class="card-header">
+                                <h3 class="card-title">Notification Preferences</h3>
+                            </div>
+                            <div class="form-group">
+                                <div class="toggle-container">
+                                    <div class="toggle-label">
+                                        <strong>Push notifications</strong>
+                                        <p style="font-size: 12px; color: #888; margin-top: 3px;">Receive notifications even when the app is closed</p>
+                                    </div>
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" checked>
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="toggle-container">
+                                    <div class="toggle-label">
+                                        <strong>Email notifications</strong>
+                                        <p style="font-size: 12px; color: #888; margin-top: 3px;">Receive notifications via email</p>
+                                    </div>
+                                    <label class="toggle-switch">
+                                        <input type="checkbox">
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="toggle-container">
+                                    <div class="toggle-label">
+                                        <strong>Sound notifications</strong>
+                                        <p style="font-size: 12px; color: #888; margin-top: 3px;">Play sounds for new notifications</p>
+                                    </div>
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" checked>
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="settings-card">
+                            <div class="card-header">
+                                <h3 class="card-title">Notification Types</h3>
+                            </div>
+                            <div class="form-group">
+                                <div class="toggle-container">
+                                    <div class="toggle-label">
+                                        <strong>New message alerts</strong>
+                                        <p style="font-size: 12px; color: #888; margin-top: 3px;">Notify when you receive new messages</p>
+                                    </div>
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" checked>
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="toggle-container">
+                                    <div class="toggle-label">
+                                        <strong>System updates</strong>
+                                        <p style="font-size: 12px; color: #888; margin-top: 3px;">Notify about important system updates</p>
+                                    </div>
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" checked>
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="toggle-container">
+                                    <div class="toggle-label">
+                                        <strong>Promotional offers</strong>
+                                        <p style="font-size: 12px; color: #888; margin-top: 3px;">Notify about special offers and promotions</p>
+                                    </div>
+                                    <label class="toggle-switch">
+                                        <input type="checkbox">
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Subscription Settings -->
+                <div class="content-section" id="subscription-section">
+                    <h2 class="section-title">Subscription</h2>
+                    <p class="section-description">Manage your Dark AI subscription and billing.</p>
+
+                    <div class="settings-cards">
+                        <div class="subscription-card">
+                            <div class="subscription-badge">PREMIUM</div>
+                            <h3 class="subscription-title">Dark AI Premium</h3>
+                            <div class="subscription-price" id="selectedPrice">$10<span style="font-size: 16px; color: #888;">/month</span></div>
+                            <div class="subscription-features">
+                                <div class="subscription-feature">
+                                    <span class="subscription-feature-icon">✓</span>
+                                    Unlimited AI Image Generation
+                                </div>
+                                <div class="subscription-feature">
+                                    <span class="subscription-feature-icon">✓</span>
+                                    Advanced Hacking Tools & Penetration Testing
+                                </div>
+                                <div class="subscription-feature">
+                                    <span class="subscription-feature-icon">✓</span>
+                                    Website Hosting & Management
+                                </div>
+                                <div class="subscription-feature">
+                                    <span class="subscription-feature-icon">✓</span>
+                                    Priority AI Assistant Access
+                                </div>
+                                <div class="subscription-feature">
+                                    <span class="subscription-feature-icon">✓</span>
+                                    Faster Code Generation
+                                </div>
+                            </div>
+                            <div class="btn-group">
+                                <button class="btn btn-primary" onclick="manageSubscription()">Manage Subscription</button>
+                                <button class="btn btn-danger" onclick="cancelSubscription()">Cancel Subscription</button>
+                            </div>
+                        </div>
+
+                        <div class="settings-card">
+                            <div class="card-header">
+                                <h3 class="card-title">Payment Method</h3>
+                            </div>
+                            <p class="card-description">Your current payment method will be charged monthly.</p>
+                            <div class="form-group">
+                                <label class="form-label">Card Number</label>
+                                <input type="text" class="form-input" value="•••• •••• •••• 4242" readonly>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Expiry Date</label>
+                                <input type="text" class="form-input" value="12/25" readonly>
+                            </div>
+                            <div class="btn-group">
+                                <button class="btn btn-secondary" onclick="updatePaymentMethod()">Update Payment Method</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- About Settings -->
+                <div class="content-section" id="about-section">
+                    <h2 class="section-title">About Dark AI</h2>
+                    <p class="section-description">Information about the Dark AI application and its developers.</p>
+
+                    <div class="settings-cards">
+                        <div class="settings-card">
+                            <div class="card-header">
+                                <h3 class="card-title">Application Information</h3>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Version</label>
+                                <input type="text" class="form-input" value="Dark AI v2.1.0" readonly>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Build Number</label>
+                                <input type="text" class="form-input" value="2024.03.15.001" readonly>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Last Updated</label>
+                                <input type="text" class="form-input" value="March 15, 2024" readonly>
+                            </div>
+                            <div class="btn-group">
+                                <button class="btn btn-secondary" onclick="checkForUpdates()">Check for Updates</button>
+                            </div>
+                        </div>
+
+                        <div class="settings-card">
+                            <div class="card-header">
+                                <h3 class="card-title">Support & Resources</h3>
+                            </div>
+                            <p class="card-description">Get help and learn more about Dark AI.</p>
+                            <div class="btn-group" style="flex-direction: column; align-items: flex-start;">
+                                <button class="btn btn-secondary" onclick="viewHelpCenter()" style="width: 100%; margin-bottom: 10px; text-align: left;">Help Center</button>
+                                <button class="btn btn-secondary" onclick="viewDocumentation()" style="width: 100%; margin-bottom: 10px; text-align: left;">Documentation</button>
+                                <button class="btn btn-secondary" onclick="contactSupport()" style="width: 100%; margin-bottom: 10px; text-align: left;">Contact Support</button>
+                                <button class="btn btn-secondary" onclick="viewTermsOfService()" style="width: 100%; margin-bottom: 10px; text-align: left;">Terms of Service</button>
+                                <button class="btn btn-secondary" onclick="viewPrivacyPolicy()" style="width: 100%; text-align: left;">Privacy Policy</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Payment Modal -->
+    <div class="payment-modal" id="paymentModal">
+        <div class="payment-content">
+            <button class="modal-close" onclick="closePaymentModal()">×</button>
+
+            <!-- Payment Form -->
+            <div id="paymentForm">
+                <h2 class="payment-title">Dark AI Premium</h2>
+                <p class="payment-subtitle">Unlock the full potential of Dark AI</p>
+
+                <div class="subscription-options">
+                    <div class="subscription-option" data-plan="monthly" data-price="10">
+                        <div class="subscription-option-title">Monthly</div>
+                        <div class="subscription-option-price">$10</div>
+                        <div class="subscription-option-savings">per month</div>
+                    </div>
+                    <div class="subscription-option" data-plan="quarterly" data-price="27">
+                        <div class="subscription-option-title">Quarterly</div>
+                        <div class="subscription-option-price">$27</div>
+                        <div class="subscription-option-savings">Save 10%</div>
+                    </div>
+                    <div class="subscription-option" data-plan="yearly" data-price="96">
+                        <div class="subscription-option-title">Yearly</div>
+                        <div class="subscription-option-price">$96</div>
+                        <div class="subscription-option-savings">Save 20%</div>
+                    </div>
+                </div>
+
+                <div class="payment-features">
+                    <div class="payment-feature">
+                        <span class="payment-feature-icon">✓</span>
+                        Unlimited AI Image Generation
+                    </div>
+                    <div class="payment-feature">
+                        <span class="payment-feature-icon">✓</span>
+                        Advanced Hacking Tools & Penetration Testing
+                    </div>
+                    <div class="payment-feature">
+                        <span class="payment-feature-icon">✓</span>
+                        Website Hosting & Management
+                    </div>
+                    <div class="payment-feature">
+                        <span class="payment-feature-icon">✓</span>
+                        Priority AI Assistant Access
+                    </div>
+                    <div class="payment-feature">
+                        <span class="payment-feature-icon">✓</span>
+                        Faster Code Generation
+                    </div>
+                </div>
+
+                <div class="card-details">
+                    <div class="form-group">
+                        <label class="form-label" for="cardNumber">Card Number</label>
+                        <input
+                            type="text"
+                            id="cardNumber"
+                            class="form-input"
+                            placeholder="1234 5678 9012 3456"
+                            maxlength="19"
+                        />
+                    </div>
+
+                    <div class="card-row">
+                        <div class="form-group">
+                            <label class="form-label" for="expiryDate">Expiry Date</label>
+                            <input
+                                type="text"
+                                id="expiryDate"
+                                class="form-input"
+                                placeholder="MM/YY"
+                                maxlength="5"
+                            />
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="cvv">CVV</label>
+                            <input
+                                type="text"
+                                id="cvv"
+                                class="form-input"
+                                placeholder="123"
+                                maxlength="3"
+                            />
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="cardName">Name on Card</label>
+                        <input
+                            type="text"
+                            id="cardName"
+                            class="form-input"
+                            placeholder="John Doe"
+                        />
+                    </div>
+                </div>
+
+                <button class="payment-button" onclick="processPayment()">
+                    Complete Payment - $<span id="paymentAmount">10</span>
+                </button>
+            </div>
+
+            <!-- Payment Success -->
+            <div class="payment-success" id="paymentSuccess">
+                <div class="success-icon">✓</div>
+                <h2 class="payment-title">Payment Successful!</h2>
+                <p class="payment-subtitle">
+                    Thank you for subscribing to Dark AI Premium
+                </p>
+                <p style="margin-top: 15px; color: #e0e0e0">
+                    You now have access to all premium features.
+                </p>
+                <button
+                    class="payment-button"
+                    onclick="closePaymentModal()"
+                    style="margin-top: 20px"
+                >
+                    Continue
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>&copy; 2024 Dark AI Assistant. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // Initialize settings page
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load user profile
+            loadUserProfile();
+            
+            // Set up navigation
+            setupNavigation();
+            
+            // Set up theme selection
+            setupThemeSelection();
+            
+            // Load saved settings
+            loadSavedSettings();
+            
+            // Set up subscription options
+            setupSubscriptionOptions();
+            
+            // Set up mobile menu toggle
+            setupMobileMenu();
+        });
+
+        // Set up mobile menu functionality
+        function setupMobileMenu() {
+            const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+            const settingsSidebar = document.getElementById('settingsSidebar');
+            const sidebarOverlay = document.getElementById('sidebarOverlay');
+            
+            if (mobileMenuToggle && settingsSidebar && sidebarOverlay) {
+                mobileMenuToggle.addEventListener('click', function() {
+                    settingsSidebar.classList.toggle('active');
+                    sidebarOverlay.classList.toggle('active');
+                });
+                
+                sidebarOverlay.addEventListener('click', function() {
+                    settingsSidebar.classList.remove('active');
+                    sidebarOverlay.classList.remove('active');
+                });
+                
+                // Close mobile menu when a nav item is clicked
+                const navItems = document.querySelectorAll('.nav-item');
+                navItems.forEach(item => {
+                    item.addEventListener('click', function() {
+                        if (window.innerWidth <= 768) {
+                            settingsSidebar.classList.remove('active');
+                            sidebarOverlay.classList.remove('active');
+                        }
+                    });
+                });
+            }
+        }
+
+        // Load user profile from localStorage
+        function loadUserProfile() {
+            const userData = JSON.parse(localStorage.getItem('darkAIUser'));
+            if (userData) {
+                document.getElementById('profileName').textContent = userData.name || 'User Name';
+                document.getElementById('profileEmail').textContent = userData.email || 'user@example.com';
+                document.getElementById('emailDisplay').textContent = userData.email || 'user@example.com';
+                document.getElementById('usernameInput').value = userData.name || '';
+                
+                if (userData.avatar && userData.avatar !== 'mylogo.jpg') {
+                    document.getElementById('profileAvatar').src = userData.avatar;
+                }
+            }
+        }
+
+        // Set up navigation between sections
+        function setupNavigation() {
+            const navItems = document.querySelectorAll('.nav-item');
+            
+            navItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    // Remove active class from all items
+                    navItems.forEach(nav => nav.classList.remove('active'));
+                    
+                    // Add active class to clicked item
+                    this.classList.add('active');
+                    
+                    // Hide all sections
+                    const sections = document.querySelectorAll('.content-section');
+                    sections.forEach(section => section.classList.remove('active'));
+                    
+                    // Show selected section
+                    const sectionId = this.getAttribute('data-section') + '-section';
+                    document.getElementById(sectionId).classList.add('active');
+                });
+            });
+        }
+
+        // Set up theme selection
+        function setupThemeSelection() {
+            const themeOptions = document.querySelectorAll('.theme-option');
+            
+            themeOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    // Remove active class from all options
+                    themeOptions.forEach(opt => opt.classList.remove('active'));
+                    
+                    // Add active class to clicked option
+                    this.classList.add('active');
+                    
+                    // Apply theme
+                    const theme = this.getAttribute('data-theme');
+                    applyTheme(theme);
+                });
+            });
+        }
+
+        // Apply selected theme
+        function applyTheme(theme) {
+            // Remove all theme classes
+            document.body.classList.remove('dark-mode', 'light-mode', 'blue-mode');
+            
+            // Add selected theme class
+            if (theme === 'light') {
+                document.body.classList.add('light-mode');
+            } else if (theme === 'blue') {
+                document.body.classList.add('blue-mode');
+            } else {
+                document.body.classList.add('dark-mode');
+            }
+            
+            // Save theme preference
+            localStorage.setItem('darkAITheme', theme);
+        }
+
+        // Load saved settings from localStorage
+        function loadSavedSettings() {
+            // Load theme
+            const savedTheme = localStorage.getItem('darkAITheme') || 'dark';
+            applyTheme(savedTheme);
+            
+            // Set active theme option
+            const themeOptions = document.querySelectorAll('.theme-option');
+            themeOptions.forEach(option => {
+                if (option.getAttribute('data-theme') === savedTheme) {
+                    option.classList.add('active');
+                }
+            });
+            
+            // Load other settings
+            const settings = JSON.parse(localStorage.getItem('darkAISettings')) || {};
+            
+            // Language
+            if (settings.language) {
+                document.getElementById('languageSelect').value = settings.language;
+            }
+            
+            // Timezone
+            if (settings.timezone) {
+                document.getElementById('timezoneSelect').value = settings.timezone;
+            }
+            
+            // Voice
+            if (settings.voice) {
+                document.getElementById('voiceSelect').value = settings.voice;
+            }
+            
+            // Font size
+            if (settings.fontSize) {
+                document.getElementById('fontSizeSelect').value = settings.fontSize;
+            }
+            
+            // Chat density
+            if (settings.chatDensity) {
+                document.getElementById('chatDensitySelect').value = settings.chatDensity;
+            }
+        }
+
+        // Save profile changes
+        function saveProfile() {
+            const username = document.getElementById('usernameInput').value;
+            
+            if (!username) {
+                alert('Please enter a username');
+                return;
+            }
+            
+            // Update user data
+            const userData = JSON.parse(localStorage.getItem('darkAIUser')) || {};
+            userData.name = username;
+            localStorage.setItem('darkAIUser', JSON.stringify(userData));
+            
+            // Update UI
+            document.getElementById('profileName').textContent = username;
+            
+            alert('Profile updated successfully!');
+        }
+
+        // Handle avatar upload
+        document.getElementById('avatarUpload').addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    // Update avatar in UI
+                    document.getElementById('profileAvatar').src = e.target.result;
+                    
+                    // Save to localStorage
+                    const userData = JSON.parse(localStorage.getItem('darkAIUser')) || {};
+                    userData.avatar = e.target.result;
+                    localStorage.setItem('darkAIUser', JSON.stringify(userData));
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Change password
+        function changePassword() {
+            const currentPassword = document.getElementById('currentPassword').value;
+            const newPassword = document.getElementById('newPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            
+            if (!currentPassword || !newPassword || !confirmPassword) {
+                alert('Please fill in all password fields');
+                return;
+            }
+            
+            if (newPassword !== confirmPassword) {
+                alert('New passwords do not match');
+                return;
+            }
+            
+            // In a real app, this would make an API call to change the password
+            alert('Password changed successfully!');
+            
+            // Clear password fields
+            document.getElementById('currentPassword').value = '';
+            document.getElementById('newPassword').value = '';
+            document.getElementById('confirmPassword').value = '';
+        }
+
+        // Save settings when they change
+        function saveSettings() {
+            const settings = {
+                language: document.getElementById('languageSelect').value,
+                timezone: document.getElementById('timezoneSelect').value,
+                voice: document.getElementById('voiceSelect').value,
+                fontSize: document.getElementById('fontSizeSelect').value,
+                chatDensity: document.getElementById('chatDensitySelect').value
+            };
+            
+            localStorage.setItem('darkAISettings', JSON.stringify(settings));
+        }
+
+        // Add event listeners to save settings when they change
+        document.getElementById('languageSelect').addEventListener('change', saveSettings);
+        document.getElementById('timezoneSelect').addEventListener('change', saveSettings);
+        document.getElementById('voiceSelect').addEventListener('change', saveSettings);
+        document.getElementById('fontSizeSelect').addEventListener('change', saveSettings);
+        document.getElementById('chatDensitySelect').addEventListener('change', saveSettings);
+
+        // Set up subscription options
+        function setupSubscriptionOptions() {
+            const subscriptionOptions = document.querySelectorAll('.subscription-option');
+            
+            subscriptionOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    // Remove active class from all options
+                    subscriptionOptions.forEach(opt => opt.classList.remove('active'));
+                    
+                    // Add active class to clicked option
+                    this.classList.add('active');
+                    
+                    // Update price display
+                    const price = this.getAttribute('data-price');
+                    const plan = this.getAttribute('data-plan');
+                    
+                    document.getElementById('selectedPrice').innerHTML = `$${price}<span style="font-size: 16px; color: #888;">/${plan === 'monthly' ? 'month' : plan === 'quarterly' ? '3 months' : 'year'}</span>`;
+                });
+            });
+            
+            // Set monthly as default
+            subscriptionOptions[0].classList.add('active');
+        }
+
+        // Manage subscription - opens payment modal
+        function manageSubscription() {
+            const paymentModal = document.getElementById('paymentModal');
+            paymentModal.classList.add('active');
+            
+            // Set up subscription options in modal
+            const subscriptionOptions = document.querySelectorAll('#paymentModal .subscription-option');
+            
+            subscriptionOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    // Remove active class from all options
+                    subscriptionOptions.forEach(opt => opt.classList.remove('active'));
+                    
+                    // Add active class to clicked option
+                    this.classList.add('active');
+                    
+                    // Update payment amount
+                    const price = this.getAttribute('data-price');
+                    document.getElementById('paymentAmount').textContent = price;
+                });
+            });
+            
+            // Set monthly as default
+            subscriptionOptions[0].classList.add('active');
+        }
+
+        // Close payment modal
+        function closePaymentModal() {
+            const paymentModal = document.getElementById('paymentModal');
+            paymentModal.classList.remove('active');
+        }
+
+        // Process payment
+        function processPayment() {
+            // Show success message
+            document.getElementById('paymentForm').style.display = 'none';
+            document.getElementById('paymentSuccess').classList.add('active');
+            
+            // In a real app, this would process the payment through a payment gateway
+        }
+
+        // Upgrade for specific feature
+        function upgradeForFeature(featureName) {
+            alert(`You need Dark AI Premium to access ${featureName}.`);
+            manageSubscription();
+        }
+
+        // Update payment method
+        function updatePaymentMethod() {
+            manageSubscription();
+        }
+
+        // Cancel subscription
+        function cancelSubscription() {
+            if (confirm('Are you sure you want to cancel your subscription? You will lose access to premium features immediately.')) {
+                alert('Subscription cancelled successfully');
+            }
+        }
+
+        // Placeholder functions for various actions
+        function clearChatHistory() {
+            if (confirm('Are you sure you want to clear your chat history? This action cannot be undone.')) {
+                // In a real app, this would clear the chat history
+                alert('Chat history cleared successfully!');
+            }
+        }
+
+        function exportData() {
+            alert('Data export functionality would be implemented here');
+        }
+
+        function viewActiveSessions() {
+            alert('Active sessions view would be shown here');
+        }
+
+        function viewPrivacyPolicy() {
+            // Open in same tab
+            window.location.href = 'privacy.html';
+        }
+
+        function viewBillingHistory() {
+            alert('Billing history would be shown here');
+        }
+
+        function checkForUpdates() {
+            alert('Your app is up to date!');
+        }
+
+        function viewHelpCenter() {
+            // Open in same tab
+            window.location.href = 'help.html';
+        }
+
+        function viewDocumentation() {
+            // Open in same tab
+            window.location.href = 'docs.html';
+        }
+
+        function contactSupport() {
+            // Open in same tab
+            window.location.href = 'support.html';
+        }
+
+        function viewTermsOfService() {
+            // Open in same tab
+            window.location.href = 'terms.html';
+        }
+    </script>
+</body>
+</html>

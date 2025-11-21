@@ -1,0 +1,2752 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dark - AI</title>
+
+    <!-- External JavaScript Files -->
+    <script src="js/config.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/chat.js"></script>
+    <script src="js/ui.js"></script>
+
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        user-select: none;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          "Helvetica Neue", Arial, sans-serif;
+        background: #000000;
+        color: #e0e0e0;
+        height: 100vh;
+        overflow: hidden;
+        transition: background 0.3s, color 0.3s;
+      }
+
+      body.light-mode {
+        background: #f5f5f5;
+        color: #333;
+      }
+
+      /* Entrance Animation */
+      .entrance-animation {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: #000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 10000;
+        opacity: 1;
+        transition: opacity 1s ease-in-out;
+      }
+
+      .entrance-animation.hidden {
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      .sharingan-container {
+        position: relative;
+        width: 200px;
+        height: 200px;
+      }
+
+      .sharingan {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 120px;
+        height: 120px;
+        border: 3px solid #c00;
+        border-radius: 50%;
+        animation: sharinganSpin 3s linear infinite;
+      }
+
+      .sharingan::before {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 80px;
+        height: 80px;
+        border: 2px solid #c00;
+        border-radius: 50%;
+      }
+
+      .sharingan::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 20px;
+        height: 20px;
+        background: #c00;
+        border-radius: 50%;
+      }
+
+      .tomoe {
+        position: absolute;
+        width: 25px;
+        height: 25px;
+        background: #c00;
+        border-radius: 50%;
+        top: -12px;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+
+      .tomoe::before {
+        content: "";
+        position: absolute;
+        width: 8px;
+        height: 8px;
+        background: #000;
+        border-radius: 50%;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
+
+      .tomoe:nth-child(1) {
+        transform: translateX(-50%) rotate(0deg) translateY(-45px) rotate(0deg);
+      }
+
+      .tomoe:nth-child(2) {
+        transform: translateX(-50%) rotate(120deg) translateY(-45px)
+          rotate(-120deg);
+      }
+
+      .tomoe:nth-child(3) {
+        transform: translateX(-50%) rotate(240deg) translateY(-45px)
+          rotate(-240deg);
+      }
+
+      .dark-logo {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 24px;
+        font-weight: bold;
+        color: #fff;
+        opacity: 0;
+        animation: logoAppear 2s ease-in-out 2s forwards;
+        text-shadow: 0 0 10px #c00, 0 0 20px #c00;
+      }
+
+      .glow-effect {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 300px;
+        height: 300px;
+        background: radial-gradient(
+          circle,
+          rgba(192, 0, 0, 0.3) 0%,
+          rgba(192, 0, 0, 0) 70%
+        );
+        border-radius: 50%;
+        opacity: 0;
+        animation: glowPulse 2s ease-in-out 1.5s forwards;
+      }
+
+      @keyframes sharinganSpin {
+        0% {
+          transform: translate(-50%, -50%) rotate(0deg) scale(0.5);
+          opacity: 0;
+        }
+        50% {
+          transform: translate(-50%, -50%) rotate(180deg) scale(1.2);
+          opacity: 1;
+        }
+        100% {
+          transform: translate(-50%, -50%) rotate(360deg) scale(1);
+          opacity: 1;
+        }
+      }
+
+      @keyframes logoAppear {
+        0% {
+          opacity: 0;
+          transform: translate(-50%, -50%) scale(3);
+        }
+        70% {
+          opacity: 1;
+          transform: translate(-50%, -50%) scale(0.9);
+        }
+        100% {
+          opacity: 1;
+          transform: translate(-50%, -50%) scale(1);
+        }
+      }
+
+      @keyframes glowPulse {
+        0% {
+          opacity: 0;
+          transform: translate(-50%, -50%) scale(0.5);
+        }
+        50% {
+          opacity: 0.8;
+          transform: translate(-50%, -50%) scale(1.2);
+        }
+        100% {
+          opacity: 0.4;
+          transform: translate(-50%, -50%) scale(1);
+        }
+      }
+
+      .container {
+        display: flex;
+        height: 100vh;
+        opacity: 0;
+        transition: opacity 1s ease-in-out;
+      }
+
+      .container.visible {
+        opacity: 1;
+      }
+
+      /* Sidebar */
+      .sidebar {
+        width: 280px;
+        background: #111111;
+        border-right: 1px solid #222222;
+        display: flex;
+        flex-direction: column;
+        transition: transform 0.3s ease, background 0.3s, border-color 0.3s,
+          width 0.3s;
+        position: relative;
+      }
+
+      .sidebar.collapsed {
+        width: 0;
+        overflow: hidden;
+      }
+
+      body.light-mode .sidebar {
+        background: #ffffff;
+        border-right: 1px solid #e0e0e0;
+      }
+
+      .sidebar-header {
+        padding: 20px;
+        border-bottom: 1px solid #222222;
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        transition: border-color 0.3s;
+      }
+
+      body.light-mode .sidebar-header {
+        border-bottom: 1px solid #e0e0e0;
+      }
+
+      .sidebar-profile {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px 15px;
+
+        border-radius: 12px;
+
+        transition: all 0.3s ease;
+      }
+
+      .sidebar-profile:hover {
+        transform: translateY(-1px);
+      }
+
+      .sidebar-profile-pic {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        object-fit: cover;
+      }
+
+      .sidebar-profile-name {
+        font-weight: 600;
+        font-size: 16px;
+        color: #e0e0e0;
+      }
+
+      .new-chat-btn {
+        width: 100%;
+        padding: 12px;
+        background: #222222;
+        border: 1px solid #333333;
+        color: #e0e0e0;
+        border-radius: 12px;
+        cursor: pointer;
+        font-size: 14px;
+        transition: all 0.3s ease;
+        position: relative;
+      }
+
+      body.light-mode .new-chat-btn {
+        background: #f0f0f0;
+        border: 1px solid #d0d0d0;
+        color: #333;
+      }
+
+      .new-chat-btn:hover {
+        background: #2a2a2a;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(192, 0, 0, 0.2);
+      }
+
+      body.light-mode .new-chat-btn:hover {
+        background: #e0e0e0;
+      }
+
+      /* History Section */
+      .history-section {
+        flex: 1;
+        overflow-y: auto;
+        padding: 10px;
+      }
+
+      .history-item {
+        padding: 10px 12px;
+        margin: 4px 0;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 14px;
+        color: #b0b0b0;
+        transition: background 0.2s, color 0.3s;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        overflow: hidden;
+        white-space: nowrap;
+      }
+
+      body.light-mode .history-item {
+        color: #666;
+      }
+
+      .history-item:hover {
+        background: #222222;
+      }
+
+      body.light-mode .history-item:hover {
+        background: #f0f0f0;
+      }
+
+      .history-item-actions {
+        display: flex;
+        gap: 5px;
+        opacity: 0;
+        transition: opacity 0.2s;
+      }
+
+      .history-item:hover .history-item-actions {
+        opacity: 1;
+      }
+
+      .history-action-btn {
+        background: none;
+        border: none;
+        color: #888;
+        cursor: pointer;
+        font-size: 12px;
+        padding: 2px 5px;
+        border-radius: 3px;
+        transition: background 0.2s, color 0.2s;
+        position: relative;
+      }
+
+      .history-action-btn:hover::after {
+        content: attr(data-tooltip);
+        position: absolute;
+        bottom: -30px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: #333;
+        color: white;
+        padding: 5px 10px;
+        border-radius: 4px;
+        font-size: 12px;
+        white-space: nowrap;
+        z-index: 100;
+      }
+
+      .history-action-btn:hover {
+        background: #3a3a3a;
+        color: #e0e0e0;
+      }
+
+      body.light-mode .history-action-btn:hover {
+        background: #e0e0e0;
+        color: #333;
+      }
+
+      .collapse-btn {
+        position: absolute;
+        top: 20px;
+        left: 290px;
+        background: #222222;
+        border: 1px solid #333333;
+        color: #888;
+        cursor: pointer;
+        font-size: 16px;
+        padding: 8px 10px;
+        border-radius: 4px;
+        transition: background 0.2s, color 0.2s;
+        z-index: 10;
+      }
+
+      .collapse-btn.collapsed {
+        left: 10px;
+      }
+
+      .collapse-btn:hover {
+        background: #3a3a3a;
+        color: #e0e0e0;
+      }
+
+      /* Main Chat Area */
+      .main {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        background: #000000;
+        transition: background 0.3s;
+      }
+
+      body.light-mode .main {
+        background: #f5f5f5;
+      }
+
+      .chat-header {
+        padding: 15px 20px;
+        border-bottom: 1px solid #222222;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        transition: border-color 0.3s;
+      }
+
+      body.light-mode .chat-header {
+        border-bottom: 1px solid #e0e0e0;
+      }
+
+      .logo {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .logo-img {
+        height: 32px;
+        width: auto;
+      }
+
+      .menu-toggle {
+        display: none;
+        background: none;
+        border: none;
+        color: #e0e0e0;
+        font-size: 20px;
+        cursor: pointer;
+        padding: 5px;
+        transition: color 0.3s;
+      }
+
+      body.light-mode .menu-toggle {
+        color: #333;
+      }
+
+      .header-buttons {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+      }
+
+      /* Auth Buttons */
+      .auth-buttons {
+        display: flex;
+        gap: 10px;
+      }
+
+      .auth-btn {
+        background: transparent;
+        border: 1px solid #333333;
+        color: #e0e0e0;
+        padding: 8px 16px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 14px;
+        transition: background 0.3s, color 0.3s;
+      }
+
+      body.light-mode .auth-btn {
+        border: 1px solid #d0d0d0;
+        color: #333;
+      }
+
+      .auth-btn:hover {
+        background: #222222;
+      }
+
+      body.light-mode .auth-btn:hover {
+        background: #f0f0f0;
+      }
+
+      .auth-btn.signup {
+        background: #c00;
+        color: white;
+        border: 1px solid #c00;
+      }
+
+      .auth-btn.signup:hover {
+        background: #ff4d4d;
+        border: 1px solid #ff4d4d;
+      }
+
+      /* Pricing Button */
+      .pricing-button {
+        background: transparent;
+        border: none;
+        color: #e0e0e0;
+        font-size: 14px;
+        cursor: pointer;
+        padding: 8px 12px;
+        border-radius: 6px;
+        transition: background 0.3s, color 0.3s;
+        position: relative;
+        display: none; /* Hidden by default */
+      }
+
+      body.light-mode .pricing-button {
+        color: #333;
+      }
+
+      .pricing-button:hover {
+        background: rgba(255, 255, 255, 0.1);
+      }
+
+      body.light-mode .pricing-button:hover {
+        background: rgba(0, 0, 0, 0.05);
+      }
+
+      .pricing-button.pro {
+        color: #c00;
+        font-weight: 600;
+      }
+
+      .pricing-dropdown {
+        position: absolute;
+        top: 100%;
+        right: 0;
+        background: #111111;
+        border: 1px solid #333333;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        padding: 15px;
+        min-width: 250px;
+        z-index: 100;
+        display: none;
+        transition: background 0.3s, border-color 0.3s;
+      }
+
+      body.light-mode .pricing-dropdown {
+        background: #ffffff;
+        border: 1px solid #e0e0e0;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      }
+
+      .pricing-dropdown.active {
+        display: block;
+      }
+
+      .pricing-title {
+        font-size: 18px;
+        font-weight: 600;
+        margin-bottom: 10px;
+        text-align: center;
+      }
+
+      .pricing-price {
+        font-size: 32px;
+        font-weight: 700;
+        color: #c00;
+        text-align: center;
+        margin-bottom: 15px;
+      }
+
+      .pricing-features {
+        margin-bottom: 15px;
+      }
+
+      .pricing-feature {
+        display: flex;
+        align-items: center;
+        margin-bottom: 8px;
+        font-size: 14px;
+      }
+
+      .pricing-feature-icon {
+        color: #c00;
+        margin-right: 8px;
+      }
+
+      .pricing-button-primary {
+        width: 100%;
+        padding: 10px;
+        background: #c00;
+        border: none;
+        border-radius: 6px;
+        color: white;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.3s;
+      }
+
+      .pricing-button-primary:hover {
+        background: #ff4d4d;
+      }
+
+      .pricing-button-primary:disabled {
+        background: #666;
+        cursor: not-allowed;
+      }
+
+      .user-profile-btn {
+        background: transparent;
+        border: 1px solid #333333;
+        color: #e0e0e0;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        cursor: pointer;
+        font-size: 18px;
+        transition: background 0.2s, border-color 0.3s, color 0.3s;
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+      }
+
+      body.light-mode .user-profile-btn {
+        border: 1px solid #d0d0d0;
+        color: #333;
+      }
+
+      body.light-mode .user-profile-btn:hover {
+        background: #e0e0e0;
+      }
+
+      .profile-pic {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        object-fit: cover;
+      }
+
+      body.light-mode .profile-pic {
+        border: 1px solid #d0d0d0;
+      }
+
+      .user-menu {
+        position: absolute;
+        top: 60px;
+        right: 20px;
+        background: #222222;
+        border-radius: 6px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        padding: 8px 0;
+        display: none;
+        z-index: 100;
+        transition: background 0.3s;
+        min-width: 150px;
+      }
+
+      body.light-mode .user-menu {
+        background: #ffffff;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      }
+
+      .user-menu.active {
+        display: block;
+      }
+
+      .user-menu-item {
+        padding: 10px 15px;
+        cursor: pointer;
+        transition: background 0.2s;
+        font-size: 14px;
+      }
+
+      .user-menu-item:hover {
+        background: #333333;
+      }
+
+      body.light-mode .user-menu-item:hover {
+        background: #f0f0f0;
+      }
+
+      /* Chat Messages - WhatsApp Style */
+      .chat-messages {
+        flex: 1;
+        overflow-y: auto;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        scrollbar-width: thin;
+        scrollbar-color: #333333 #111111;
+      }
+
+      .chat-messages::-webkit-scrollbar {
+        width: 6px;
+      }
+
+      .chat-messages::-webkit-scrollbar-track {
+        background: #111111;
+        border-radius: 3px;
+      }
+
+      .chat-messages::-webkit-scrollbar-thumb {
+        background: #333333;
+        border-radius: 3px;
+      }
+
+      .chat-messages::-webkit-scrollbar-thumb:hover {
+        background: #444444;
+      }
+
+      body.light-mode .chat-messages::-webkit-scrollbar-track {
+        background: #f0f0f0;
+      }
+
+      body.light-mode .chat-messages::-webkit-scrollbar-thumb {
+        background: #d0d0d0;
+      }
+
+      body.light-mode .chat-messages::-webkit-scrollbar-thumb:hover {
+        background: #c0c0c0;
+      }
+
+      .message {
+        max-width: 70%;
+        position: relative;
+        display: flex;
+        margin-bottom: 10px;
+      }
+
+      .message.user {
+        align-self: flex-end;
+        flex-direction: row-reverse;
+      }
+
+      .message.assistant {
+        align-self: flex-start;
+      }
+
+      .message-content {
+        padding: 10px 14px;
+        border-radius: 18px;
+        line-height: 1.4;
+        position: relative;
+        word-wrap: break-word;
+      }
+
+      .message.user .message-content {
+        background: #c00;
+        color: white;
+        border-bottom-right-radius: 4px;
+      }
+
+      .message.assistant .message-content {
+        background: transparent;
+        transition: background 0.3s;
+        border-bottom-left-radius: 4px;
+        color: #e0e0e0;
+      }
+
+      body.light-mode .message.assistant .message-content {
+        background: transparent;
+        color: #333;
+      }
+
+      .message-actions {
+        position: absolute;
+        top: 0;
+        right: 0;
+        display: flex;
+        gap: 5px;
+        opacity: 0;
+        transition: opacity 0.2s;
+        padding: 5px;
+      }
+
+      .message:hover .message-actions {
+        opacity: 1;
+      }
+
+      .message-action-btn {
+        background: rgba(42, 42, 42, 0.8);
+        border: none;
+        color: #e0e0e0;
+        cursor: pointer;
+        font-size: 12px;
+        padding: 4px 8px;
+        border-radius: 4px;
+        transition: background 0.2s;
+        position: relative;
+      }
+
+      .message-action-btn:hover::after {
+        content: attr(data-tooltip);
+        position: absolute;
+        bottom: -30px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: #333;
+        color: white;
+        padding: 5px 10px;
+        border-radius: 4px;
+        font-size: 12px;
+        white-space: nowrap;
+        z-index: 100;
+      }
+
+      body.light-mode .message-action-btn {
+        background: rgba(240, 240, 240, 0.8);
+        color: #333;
+      }
+
+      .message-action-btn:hover {
+        background: #3a3a3a;
+      }
+
+      body.light-mode .message-action-btn:hover {
+        background: #e0e0e0;
+      }
+
+      /* Input Area */
+      .input-area {
+        padding: 20px;
+        border-top: 1px solid #222222;
+        transition: border-color 0.3s;
+      }
+
+      body.light-mode .input-area {
+        border-top: 1px solid #e0e0e0;
+      }
+
+      .input-container {
+        max-width: 800px;
+        margin: 0 auto;
+        background: #111111;
+        border: 1px solid #333333;
+        border-radius: 24px;
+        overflow: hidden;
+        transition: background 0.3s, border-color 0.3s;
+      }
+
+      body.light-mode .input-container {
+        background: #ffffff;
+        border: 1px solid #d0d0d0;
+      }
+
+      .input-tools {
+        display: flex;
+        gap: 8px;
+        padding: 10px 12px;
+        border-bottom: 1px solid #222222;
+        flex-wrap: wrap;
+        transition: border-color 0.3s;
+      }
+
+      body.light-mode .input-tools {
+        border-bottom: 1px solid #e0e0e0;
+      }
+
+      .tool-btn {
+        padding: 6px 12px;
+        background: transparent;
+        border: 1px solid #333333;
+        color: #b0b0b0;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 13px;
+        transition: all 0.2s;
+        white-space: nowrap;
+        position: relative;
+      }
+
+      .tool-btn:hover::after {
+        content: attr(data-tooltip);
+        position: absolute;
+        bottom: -40px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: #333;
+        color: white;
+        padding: 5px 10px;
+        border-radius: 4px;
+        font-size: 12px;
+        white-space: nowrap;
+        z-index: 100;
+      }
+
+      body.light-mode .tool-btn {
+        border: 1px solid #d0d0d0;
+        color: #666;
+      }
+
+      .tool-btn:hover {
+        background: #222222;
+        color: #e0e0e0;
+      }
+
+      body.light-mode .tool-btn:hover {
+        background: #f0f0f0;
+        color: #333;
+      }
+
+      /* Voice Button */
+      .voice-btn {
+        background: transparent;
+        border: 1px solid #333333;
+        color: #b0b0b0;
+        padding: 6px 10px;
+        font-size: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s;
+      }
+
+      .voice-btn:hover {
+        background: #222222;
+        color: #e0e0e0;
+      }
+
+      .input-wrapper {
+        display: flex;
+        align-items: flex-end;
+        padding: 12px;
+        gap: 10px;
+      }
+
+      #messageInput {
+        flex: 1;
+        background: transparent;
+        border: none;
+        color: #e0e0e0;
+        font-size: 15px;
+        outline: none;
+        resize: none;
+        max-height: 120px;
+        font-family: inherit;
+        transition: color 0.3s;
+        line-height: 1.4;
+      }
+
+      body.light-mode #messageInput {
+        color: #333;
+      }
+
+      #messageInput::placeholder {
+        color: #666;
+        transition: color 0.3s;
+      }
+
+      body.light-mode #messageInput::placeholder {
+        color: #999;
+      }
+
+      .send-btn {
+        padding: 8px 16px;
+        background: #333333;
+        border: none;
+        color: #e0e0e0;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 14px;
+        transition: background 0.2s, opacity 0.3s;
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      .send-btn.active {
+        opacity: 1;
+        pointer-events: auto;
+      }
+
+      body.light-mode .send-btn {
+        background: #d0d0d0;
+        color: #333;
+      }
+
+      .send-btn:hover {
+        background: #454545;
+      }
+
+      body.light-mode .send-btn:hover {
+        background: #c0c0c0;
+      }
+
+      .stop-btn {
+        padding: 8px 16px;
+        background: #c00;
+        border: none;
+        color: white;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 14px;
+        transition: background 0.3s;
+        display: none;
+      }
+
+      .stop-btn:hover {
+        background: #ff4d4d;
+      }
+
+      .send-btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+
+      /* File Preview */
+      .uploaded-file {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 5px;
+        background: #222222;
+        border-radius: 4px;
+        margin-bottom: 5px;
+      }
+
+      .uploaded-file img {
+        width: 20px;
+        height: 20px;
+        object-fit: cover;
+        border-radius: 2px;
+      }
+
+      .file-name {
+        font-size: 12px;
+        color: #b0b0b0;
+        max-width: 150px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .file-remove-btn {
+        background: none;
+        border: none;
+        color: #888;
+        cursor: pointer;
+        font-size: 14px;
+        padding: 2px 5px;
+        border-radius: 3px;
+        transition: background 0.2s;
+      }
+
+      .file-remove-btn:hover {
+        background: #333333;
+        color: #e0e0e0;
+      }
+
+      /* Modal */
+      .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.7);
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+      }
+
+      .modal.active {
+        display: flex;
+      }
+
+      .modal-content {
+        background: #111111;
+        padding: 30px;
+        border-radius: 12px;
+        width: 90%;
+        max-width: 500px;
+        border: 1px solid #333333;
+        transition: background 0.3s, border-color 0.3s;
+        position: relative;
+        margin-top: 40px;
+      }
+
+      body.light-mode .modal-content {
+        background: #ffffff;
+        border: 1px solid #d0d0d0;
+      }
+
+      .modal-header {
+        font-size: 20px;
+        font-weight: 600;
+        margin-bottom: 20px;
+        transition: color 0.3s;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      body.light-mode .modal-header {
+        color: #333;
+      }
+
+      .modal-close {
+        background: none;
+        border: none;
+        color: #888;
+        font-size: 24px;
+        cursor: pointer;
+        padding: 0;
+        width: 30px;
+        height: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: color 0.3s;
+      }
+
+      .modal-close:hover {
+        color: #e0e0e0;
+      }
+
+      body.light-mode .modal-close:hover {
+        color: #333;
+      }
+
+      .close-btn {
+        margin-top: 20px;
+        width: 100%;
+        padding: 10px;
+        background: #333333;
+        border: none;
+        color: #e0e0e0;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: background 0.3s, color 0.3s;
+      }
+
+      body.light-mode .close-btn {
+        background: #d0d0d0;
+        color: #333;
+      }
+
+      .close-btn:hover {
+        background: #454545;
+      }
+
+      body.light-mode .close-btn:hover {
+        background: #c0c0c0;
+      }
+
+      .welcome {
+        text-align: center;
+        padding: 40px 20px;
+        max-width: 600px;
+        margin: 0 auto;
+      }
+
+      .welcome h1 {
+        font-size: 32px;
+        margin-bottom: 12px;
+        transition: color 0.3s;
+      }
+
+      body.light-mode .welcome h1 {
+        color: #333;
+      }
+
+      .welcome p {
+        color: #888;
+        font-size: 16px;
+        transition: color 0.3s;
+      }
+
+      body.light-mode .welcome p {
+        color: #666;
+      }
+
+      input[type="file"] {
+        display: none;
+      }
+
+      /* Sign In Prompt */
+      .sign-in-prompt {
+        background: #222222;
+        border-radius: 8px;
+        padding: 15px;
+        margin: 10px 0;
+        text-align: center;
+        border: 1px solid #333333;
+      }
+
+      body.light-mode .sign-in-prompt {
+        background: #f0f0f0;
+        border: 1px solid #d0d0d0;
+      }
+
+      .sign-in-btn {
+        background: #333333;
+        border: none;
+        color: #e0e0e0;
+        padding: 8px 16px;
+        border-radius: 6px;
+        cursor: pointer;
+        margin-top: 10px;
+        transition: background 0.3s;
+      }
+
+      body.light-mode .sign-in-btn {
+        background: #d0d0d0;
+        color: #333;
+      }
+
+      .sign-in-btn:hover {
+        background: #454545;
+      }
+
+      body.light-mode .sign-in-btn:hover {
+        background: #c0c0c0;
+      }
+
+      /* Disabled input area */
+      .input-area.disabled {
+        opacity: 0.7;
+        pointer-events: none;
+      }
+
+      .input-area.disabled .input-container {
+        background: #222222;
+      }
+
+      .input-area.disabled #messageInput {
+        color: #888;
+      }
+
+      .input-area.disabled .tool-btn {
+        opacity: 0.5;
+        pointer-events: none;
+      }
+
+      /* Enhanced response styling */
+      .enhanced-response {
+        line-height: 1.6;
+      }
+
+      .enhanced-response p {
+        margin-bottom: 10px;
+      }
+
+      .enhanced-response ul,
+      .enhanced-response ol {
+        margin: 10px 0 10px 20px;
+      }
+
+      .enhanced-response li {
+        margin-bottom: 5px;
+      }
+
+      .thinking-indicator {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: #888;
+        font-style: italic;
+        margin-bottom: 10px;
+      }
+
+      .typing-dots {
+        display: flex;
+        gap: 3px;
+      }
+
+      .typing-dot {
+        width: 6px;
+        height: 6px;
+        background: #c00;
+        border-radius: 50%;
+        animation: typingPulse 1.4s infinite ease-in-out;
+      }
+
+      .typing-dot:nth-child(2) {
+        animation-delay: 0.2s;
+      }
+
+      .typing-dot:nth-child(3) {
+        animation-delay: 0.4s;
+      }
+
+      @keyframes typingPulse {
+        0%,
+        80%,
+        100% {
+          transform: scale(0.8);
+          opacity: 0.5;
+        }
+        40% {
+          transform: scale(1);
+          opacity: 1;
+        }
+      }
+
+      .capabilities-list {
+        margin-top: 15px;
+        padding-left: 20px;
+      }
+
+      .capabilities-list li {
+        margin-bottom: 8px;
+        position: relative;
+      }
+
+      .capabilities-list li:before {
+        content: "•";
+        color: #c00;
+        font-weight: bold;
+        position: absolute;
+        left: -15px;
+      }
+
+      /* SETTINGS PANEL STYLES */
+      .settings-panel {
+        position: fixed;
+        bottom: -100%;
+        right: 20px;
+        width: 350px;
+        max-height: 80vh;
+        background: #111111;
+        border: 1px solid #333333;
+        border-radius: 12px 12px 0 0;
+        box-shadow: 0 -5px 25px rgba(0, 0, 0, 0.5);
+        z-index: 1000;
+        transition: bottom 0.4s ease;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .settings-panel.active {
+        bottom: 0;
+      }
+
+      .settings-header {
+        padding: 15px 20px;
+        background: #222222;
+        border-bottom: 1px solid #333333;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        cursor: move;
+      }
+
+      .settings-title {
+        font-size: 18px;
+        font-weight: 600;
+      }
+
+      .settings-close {
+        background: none;
+        border: none;
+        color: #888;
+        font-size: 20px;
+        cursor: pointer;
+        padding: 5px;
+        border-radius: 4px;
+        transition: background 0.2s, color 0.2s;
+      }
+
+      .settings-close:hover {
+        background: #333333;
+        color: #e0e0e0;
+      }
+
+      .settings-content {
+        flex: 1;
+        overflow-y: auto;
+        padding: 20px;
+      }
+
+      .settings-section {
+        margin-bottom: 25px;
+      }
+
+      .settings-section-title {
+        font-size: 16px;
+        font-weight: 600;
+        margin-bottom: 15px;
+        color: #e0e0e0;
+      }
+
+      .settings-option {
+        padding: 12px 15px;
+        background: #222222;
+        border-radius: 8px;
+        margin-bottom: 10px;
+        cursor: pointer;
+        transition: background 0.2s;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .settings-option:hover {
+        background: #2a2a2a;
+      }
+
+      .settings-option-icon {
+        font-size: 18px;
+        margin-right: 10px;
+      }
+
+      .settings-option-text {
+        flex: 1;
+      }
+
+      .settings-option-arrow {
+        color: #888;
+      }
+
+      .settings-back {
+        background: none;
+        border: none;
+        color: #888;
+        font-size: 16px;
+        cursor: pointer;
+        padding: 5px 0;
+        margin-bottom: 15px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        transition: color 0.2s;
+      }
+
+      .settings-back:hover {
+        color: #e0e0e0;
+      }
+
+      .theme-preview {
+        display: flex;
+        gap: 10px;
+        margin-top: 10px;
+      }
+
+      .theme-option {
+        width: 60px;
+        height: 60px;
+        border-radius: 8px;
+        cursor: pointer;
+        border: 2px solid transparent;
+        transition: border 0.2s;
+      }
+
+      .theme-option:hover {
+        border: 2px solid #c00;
+      }
+
+      .theme-option.active {
+        border: 2px solid #c00;
+      }
+
+      .theme-dark {
+        background: linear-gradient(135deg, #000000 50%, #c00 50%);
+      }
+
+      .theme-light {
+        background: linear-gradient(135deg, #f5f5f5 50%, #c00 50%);
+      }
+
+      .theme-blue {
+        background: linear-gradient(135deg, #000033 50%, #c00 50%);
+      }
+
+      .language-option {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px;
+        background: #222222;
+        border-radius: 8px;
+        margin-bottom: 8px;
+        cursor: pointer;
+        transition: background 0.2s;
+      }
+
+      .language-option:hover {
+        background: #2a2a2a;
+      }
+
+      .language-flag {
+        width: 24px;
+        height: 18px;
+        border-radius: 2px;
+        object-fit: cover;
+      }
+
+      .account-option {
+        padding: 12px 15px;
+        background: #222222;
+        border-radius: 8px;
+        margin-bottom: 10px;
+        cursor: pointer;
+        transition: background 0.2s;
+      }
+
+      .account-option:hover {
+        background: #2a2a2a;
+      }
+
+      .account-option-title {
+        font-weight: 600;
+        margin-bottom: 5px;
+      }
+
+      .account-option-desc {
+        font-size: 12px;
+        color: #888;
+      }
+
+      /* Payment Modal */
+      .payment-modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.8);
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+      }
+
+      .payment-modal.active {
+        display: flex;
+      }
+
+      .payment-content {
+        background: #111111;
+        padding: 30px;
+        border-radius: 12px;
+        width: 90%;
+        max-width: 400px;
+        border: 1px solid #333333;
+        transition: background 0.3s, border-color 0.3s;
+        position: relative;
+      }
+
+      body.light-mode .payment-content {
+        background: #ffffff;
+        border: 1px solid #d0d0d0;
+      }
+
+      .payment-title {
+        font-size: 24px;
+        font-weight: 700;
+        margin-bottom: 10px;
+        text-align: center;
+      }
+
+      .payment-subtitle {
+        font-size: 16px;
+        color: #888;
+        margin-bottom: 20px;
+        text-align: center;
+      }
+
+      .payment-price {
+        font-size: 48px;
+        font-weight: 700;
+        color: #c00;
+        text-align: center;
+        margin-bottom: 20px;
+      }
+
+      .payment-features {
+        margin-bottom: 30px;
+      }
+
+      .payment-feature {
+        display: flex;
+        align-items: center;
+        margin-bottom: 15px;
+        font-size: 14px;
+        color: #e0e0e0;
+      }
+
+      .payment-feature-icon {
+        color: #c00;
+        margin-right: 10px;
+        font-size: 16px;
+      }
+
+      .card-details {
+        background: #222222;
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 20px;
+      }
+
+      .card-row {
+        display: flex;
+        gap: 15px;
+        margin-bottom: 15px;
+      }
+
+      .card-row .form-group {
+        flex: 1;
+        margin-bottom: 0;
+      }
+
+      .payment-button {
+        width: 100%;
+        padding: 14px;
+        background: #c00;
+        border: none;
+        border-radius: 8px;
+        color: white;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.3s;
+      }
+
+      .payment-button:hover {
+        background: #ff4d4d;
+      }
+
+      .payment-success {
+        display: none;
+        text-align: center;
+        padding: 20px;
+      }
+
+      .payment-success.active {
+        display: block;
+      }
+
+      .success-icon {
+        font-size: 48px;
+        color: #4caf50;
+        margin-bottom: 15px;
+      }
+
+      /* Form Elements */
+      .form-group {
+        margin-bottom: 15px;
+      }
+
+      .form-label {
+        display: block;
+        margin-bottom: 5px;
+        font-size: 14px;
+        color: #e0e0e0;
+      }
+
+      body.light-mode .form-label {
+        color: #333;
+      }
+
+      .form-input {
+        width: 100%;
+        padding: 10px;
+        background: #333333;
+        border: 1px solid #444444;
+        border-radius: 6px;
+        color: #e0e0e0;
+        font-size: 14px;
+        transition: border-color 0.3s, background 0.3s;
+      }
+
+      .form-input:focus {
+        outline: none;
+        border-color: #c00;
+        background: #3a3a3a;
+      }
+
+      body.light-mode .form-input {
+        background: #f0f0f0;
+        border: 1px solid #d0d0d0;
+        color: #333;
+      }
+
+      body.light-mode .form-input:focus {
+        background: #ffffff;
+        border-color: #c00;
+      }
+
+      .error-message {
+        color: #ff4d4d;
+        font-size: 12px;
+        margin-top: 5px;
+        display: none;
+      }
+
+      /* Page Transition */
+      .page-transition {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: #000000;
+        z-index: 10000;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.5s ease-in-out;
+      }
+
+      .page-transition.active {
+        opacity: 1;
+        pointer-events: all;
+      }
+
+      /* MOBILE STYLES */
+      @media (max-width: 768px) {
+        .sidebar {
+          position: fixed;
+          left: 0;
+          top: 0;
+          height: 100%;
+          z-index: 100;
+          transform: translateX(-100%);
+        }
+
+        .sidebar.active {
+          transform: translateX(0);
+        }
+
+        .menu-toggle {
+          display: block;
+        }
+
+        .input-tools {
+          justify-content: center;
+        }
+
+        .tool-btn {
+          flex: 1;
+          min-width: 0;
+          text-align: center;
+          font-size: 12px;
+          padding: 6px 8px;
+        }
+
+        .chat-header {
+          padding: 10px 12px;
+        }
+
+        .logo {
+          font-size: 16px;
+        }
+
+        .user-profile-btn {
+          width: 35px;
+          height: 35px;
+          font-size: 16px;
+        }
+
+        .auth-buttons {
+          gap: 5px;
+        }
+
+        .auth-btn {
+          padding: 6px 12px;
+          font-size: 12px;
+        }
+
+        /* ADJUST CHAT MESSAGES FOR MOBILE */
+        .chat-messages {
+          padding: 12px;
+          padding-bottom: 50px;
+          max-height: calc(100vh - 100px);
+          overflow-y: auto;
+        }
+
+        .message {
+          max-width: 85%;
+        }
+
+        .message-content {
+          padding: 10px 12px;
+          font-size: 14px;
+          line-height: 1.4;
+        }
+
+        .message-actions {
+          padding: 3px;
+        }
+
+        .message-action-btn {
+          font-size: 10px;
+          padding: 3px 6px;
+        }
+
+        /* ADJUST INPUT AREA PADDING */
+        .input-area {
+          padding: 5px 12px 5px;
+          position: fixed;
+          bottom: 3.2pc;
+          left: 0;
+          right: 0;
+          background: #000000;
+          z-index: 10;
+          border-top: 1px solid #222222;
+        }
+
+        body.light-mode .input-area {
+          background: #f5f5f5;
+          border-top: 1px solid #e0e0e0;
+        }
+
+        .input-container {
+          margin-bottom: 0;
+        }
+
+        .sharingan-container {
+          width: 150px;
+          height: 150px;
+        }
+
+        .sharingan {
+          width: 100px;
+          height: 100px;
+        }
+
+        .sharingan::before {
+          width: 60px;
+          height: 60px;
+        }
+
+        .tomoe {
+          width: 20px;
+          height: 20px;
+        }
+
+        .tomoe:nth-child(1) {
+          transform: translateX(-50%) rotate(0deg) translateY(-35px)
+            rotate(0deg);
+        }
+
+        .tomoe:nth-child(2) {
+          transform: translateX(-50%) rotate(120deg) translateY(-35px)
+            rotate(-120deg);
+        }
+
+        .tomoe:nth-child(3) {
+          transform: translateX(-50%) rotate(240deg) translateY(-35px)
+            rotate(-240deg);
+        }
+
+        /* Settings panel mobile adjustments */
+        .settings-panel {
+          width: 100%;
+          right: 0;
+          border-radius: 12px 12px 0 0;
+        }
+
+        /* Additional mobile adjustments for better input visibility */
+        .main {
+          padding-bottom: env(safe-area-inset-bottom, 0px);
+        }
+
+        .uploaded-file {
+          width: 80px;
+          height: 80px;
+        }
+
+        /* Settings modal adjustment for mobile */
+        .modal-content {
+          margin-top: 20px;
+        }
+
+        .collapse-btn {
+          display: none;
+        }
+
+        /* Pricing dropdown mobile adjustments */
+        .pricing-dropdown {
+          position: fixed;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          width: 90%;
+          max-width: 300px;
+        }
+
+        /* Payment modal mobile adjustments */
+        .payment-content {
+          margin-top: 20px;
+        }
+      }
+
+      /* iPhone 5 and other very small screens */
+      @media (max-width: 375px) and (max-height: 667px) {
+        .chat-messages {
+          padding: 10px;
+          padding-bottom: 50px;
+        }
+
+        .input-area {
+          padding: 3px 10px 3px;
+          bottom: 5pc;
+        }
+
+        .tool-btn {
+          font-size: 11px;
+          padding: 5px 6px;
+        }
+
+        .input-wrapper {
+          padding: 8px;
+        }
+
+        #messageInput {
+          font-size: 14px;
+        }
+
+        .send-btn {
+          padding: 6px 12px;
+          font-size: 12px;
+        }
+
+        .message-content {
+          padding: 8px 10px;
+          font-size: 13px;
+        }
+
+        .welcome h1 {
+          font-size: 24px;
+        }
+
+        .welcome p {
+          font-size: 14px;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .tool-btn {
+          font-size: 11px;
+          padding: 5px 6px;
+        }
+
+        .input-wrapper {
+          padding: 8px;
+        }
+
+        #messageInput {
+          font-size: 14px;
+        }
+
+        /* ADJUST FOR VERY SMALL SCREENS */
+        .chat-messages {
+          padding-bottom: 50px;
+        }
+
+        .input-area {
+          padding: 3px 10px 3px;
+        }
+      }
+      /* Add these styles to the existing CSS in the head section */
+
+      /* Enhanced Code Palettes */
+      .code-palette {
+        background: #1a1a1a;
+        border: 1px solid #333;
+        border-radius: 12px;
+        margin: 15px 0;
+        overflow: hidden;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      }
+
+      .code-header {
+        background: #222;
+        padding: 12px 16px;
+        border-bottom: 1px solid #333;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-family: "Monaco", "Menlo", "Ubuntu Mono", monospace;
+      }
+
+      .code-language {
+        color: #c00;
+        font-weight: 600;
+        font-size: 13px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      .code-actions {
+        display: flex;
+        gap: 8px;
+      }
+
+      .copy-code-btn {
+        background: #333;
+        border: 1px solid #444;
+        color: #e0e0e0;
+        padding: 6px 12px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 12px;
+        transition: all 0.2s;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .copy-code-btn:hover {
+        background: #c00;
+        border-color: #c00;
+        color: white;
+      }
+
+      .copy-code-btn.copied {
+        background: #4caf50;
+        border-color: #4caf50;
+        color: white;
+      }
+
+      .code-content {
+        padding: 20px;
+        font-family: "Monaco", "Menlo", "Ubuntu Mono", monospace;
+        font-size: 14px;
+        line-height: 1.5;
+        color: #e0e0e0;
+        white-space: pre-wrap;
+        word-wrap: break-word;
+        overflow-x: auto;
+        background: #1a1a1a;
+      }
+
+      /* Story Palettes */
+      .story-palette {
+        background: linear-gradient(135deg, #1a1a1a 0%, #2a1a2a 100%);
+        border: 1px solid #333;
+        border-radius: 12px;
+        margin: 15px 0;
+        padding: 20px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      }
+
+      .story-title {
+        color: #c00;
+        font-size: 18px;
+        font-weight: 700;
+        margin-bottom: 15px;
+        text-align: center;
+        border-bottom: 2px solid #c00;
+        padding-bottom: 10px;
+      }
+
+      .story-content {
+        color: #e0e0e0;
+        line-height: 1.8;
+        font-size: 15px;
+        text-align: justify;
+      }
+
+      .story-content p {
+        margin-bottom: 15px;
+      }
+
+      .story-content p:last-child {
+        margin-bottom: 0;
+      }
+
+      /* Enhanced Response Styling */
+      .enhanced-response {
+        line-height: 1.7;
+        font-size: 15px;
+      }
+
+      .enhanced-response p {
+        margin-bottom: 12px;
+      }
+
+      .enhanced-response ul,
+      .enhanced-response ol {
+        margin: 12px 0 12px 20px;
+      }
+
+      .enhanced-response li {
+        margin-bottom: 8px;
+        position: relative;
+      }
+
+      .enhanced-response strong {
+        color: #c00;
+        font-weight: 600;
+      }
+
+      .enhanced-response em {
+        color: #888;
+        font-style: italic;
+      }
+
+      .enhanced-response blockquote {
+        border-left: 4px solid #c00;
+        padding-left: 16px;
+        margin: 15px 0;
+        color: #888;
+        font-style: italic;
+      }
+
+      /* Syntax Highlighting for Code */
+      .keyword {
+        color: #c586c0;
+      }
+      .function {
+        color: #dcdcaa;
+      }
+      .string {
+        color: #ce9178;
+      }
+      .number {
+        color: #b5cea8;
+      }
+      .comment {
+        color: #6a9955;
+      }
+      .tag {
+        color: #569cd6;
+      }
+      .attribute {
+        color: #9cdcfe;
+      }
+      .selector {
+        color: #d7ba7d;
+      }
+      .property {
+        color: #9cdcfe;
+      }
+      .value {
+        color: #ce9178;
+      }
+
+      /* Add these styles to the existing CSS in the head section */
+
+/* Enhanced Code Palettes */
+.code-palette {
+    background: #1a1a1a;
+    border: 1px solid #333;
+    border-radius: 12px;
+    margin: 15px 0;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.code-header {
+    background: #222;
+    padding: 12px 16px;
+    border-bottom: 1px solid #333;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+}
+
+.code-language {
+    color: #c00;
+    font-weight: 600;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.code-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.copy-code-btn {
+    background: #333;
+    border: 1px solid #444;
+    color: #e0e0e0;
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 12px;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.copy-code-btn:hover {
+    background: #c00;
+    border-color: #c00;
+    color: white;
+}
+
+.copy-code-btn.copied {
+    background: #4caf50;
+    border-color: #4caf50;
+    color: white;
+}
+
+.code-content {
+    padding: 20px;
+    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+    font-size: 14px;
+    line-height: 1.5;
+    color: #e0e0e0;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    overflow-x: auto;
+    background: #1a1a1a;
+}
+
+/* Story Palettes */
+.story-palette {
+    background: linear-gradient(135deg, #1a1a1a 0%, #2a1a2a 100%);
+    border: 1px solid #333;
+    border-radius: 12px;
+    margin: 15px 0;
+    padding: 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.story-title {
+    color: #c00;
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 15px;
+    text-align: center;
+    border-bottom: 2px solid #c00;
+    padding-bottom: 10px;
+}
+
+.story-content {
+    color: #e0e0e0;
+    line-height: 1.8;
+    font-size: 15px;
+    text-align: justify;
+}
+
+.story-content p {
+    margin-bottom: 15px;
+}
+
+.story-content p:last-child {
+    margin-bottom: 0;
+}
+
+/* Enhanced Response Styling */
+.enhanced-response {
+    line-height: 1.7;
+    font-size: 15px;
+}
+
+.enhanced-response p {
+    margin-bottom: 12px;
+}
+
+.enhanced-response ul, .enhanced-response ol {
+    margin: 12px 0 12px 20px;
+}
+
+.enhanced-response li {
+    margin-bottom: 8px;
+    position: relative;
+}
+
+.enhanced-response strong {
+    color: #c00;
+    font-weight: 600;
+}
+
+.enhanced-response em {
+    color: #888;
+    font-style: italic;
+}
+
+.enhanced-response blockquote {
+    border-left: 4px solid #c00;
+    padding-left: 16px;
+    margin: 15px 0;
+    color: #888;
+    font-style: italic;
+}
+
+/* Add these styles to the existing CSS */
+
+/* Typing Animation Styles */
+.typing-response {
+    position: relative;
+    min-height: 20px;
+}
+
+.typing-cursor {
+    display: inline;
+    color: #c00;
+    font-weight: bold;
+    animation: blink 1s infinite;
+    margin-left: 2px;
+}
+
+@keyframes blink {
+    0%, 50% { opacity: 1; }
+    51%, 100% { opacity: 0; }
+}
+
+/* Enhanced thinking indicator */
+.thinking-indicator {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #888;
+    font-style: italic;
+}
+
+.typing-dots {
+    display: flex;
+    gap: 3px;
+}
+
+.typing-dot {
+    width: 6px;
+    height: 6px;
+    background: #c00;
+    border-radius: 50%;
+    animation: typingPulse 1.4s infinite ease-in-out;
+}
+
+.typing-dot:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.typing-dot:nth-child(3) {
+    animation-delay: 0.4s;
+}
+
+@keyframes typingPulse {
+    0%, 80%, 100% {
+        transform: scale(0.8);
+        opacity: 0.5;
+    }
+    40% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+/* Smooth scrolling for messages */
+.chat-messages {
+    scroll-behavior: smooth;
+}
+
+/* Syntax Highlighting for Code */
+.keyword { color: #c586c0; }
+.function { color: #dcdcaa; }
+.string { color: #ce9178; }
+.number { color: #b5cea8; }
+.comment { color: #6a9955; }
+.tag { color: #569cd6; }
+.attribute { color: #9cdcfe; }
+.selector { color: #d7ba7d; }
+.property { color: #9cdcfe; }
+.value { color: #ce9178; }
+    </style>
+  </head>
+  <body>
+    <!-- Page Transition Overlay -->
+    <div class="page-transition" id="pageTransition"></div>
+
+    <!-- Entrance Animation -->
+    <div class="entrance-animation" id="entranceAnimation">
+      <div class="sharingan-container">
+        <div class="glow-effect"></div>
+        <div class="sharingan">
+          <div class="tomoe"></div>
+          <div class="tomoe"></div>
+          <div class="tomoe"></div>
+        </div>
+        <div class="dark-logo"><span style="user-select: none">DARK</span></div>
+      </div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="container" id="mainContainer">
+      <!-- Sidebar -->
+      <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+          <div class="sidebar-profile">
+            <img src="mylogo.jpg" alt="Profile" class="sidebar-profile-pic" />
+            <div class="sidebar-profile-name">DARK AI</div>
+          </div>
+          <button class="new-chat-btn" onclick="chat.newChat()" id="newChatBtn">
+            + New Chat
+          </button>
+        </div>
+
+        <!-- History Section -->
+        <div class="history-section" id="history">
+          <!-- Recent conversations will be shown here -->
+        </div>
+      </div>
+
+      <!-- Collapse Button (outside sidebar) -->
+      <button
+        class="collapse-btn"
+        onclick="ui.toggleSidebarCollapse()"
+        id="collapseBtn"
+      >
+        ←
+      </button>
+
+      <!-- Main Chat Area -->
+      <div class="main">
+        <div class="chat-header">
+          <button class="menu-toggle" onclick="ui.toggleSidebar()">☰</button>
+          <div class="logo">
+            <img src="mylogo.jpg" alt="Dark Logo" class="logo-img" />
+          </div>
+          <div class="header-buttons">
+            <!-- Auth Buttons - Only shown when user is not logged in -->
+            <div class="auth-buttons" id="authButtons">
+              <button class="auth-btn signup" onclick="auth.redirectToLogin()">
+                Sign In
+              </button>
+            </div>
+
+            <!-- Pricing Button - Only shown when user is logged in -->
+            <div class="pricing-container" style="position: relative">
+              <button
+                class="pricing-button"
+                id="pricingButton"
+                onclick="ui.togglePricingDropdown()"
+              >
+                Pricing<img src="front-end/keyboard_arrow_down_16dp_E3E3E3_FILL0_wght400_GRAD0_opsz20.png" alt="">
+              </button>
+              <div class="pricing-dropdown" id="pricingDropdown">
+                <div class="pricing-title">Dark AI Premium</div>
+                <div class="pricing-price">
+                  $10<span style="font-size: 16px; color: #888">/month</span>
+                </div>
+                <div class="pricing-features">
+                  <div class="pricing-feature">
+                    <span class="pricing-feature-icon">✓</span>
+                    Unlimited AI Image Generation
+                  </div>
+                  <div class="pricing-feature">
+                    <span class="pricing-feature-icon">✓</span>
+                    Advanced Hacking Tools & Penetration Testing
+                  </div>
+                  <div class="pricing-feature">
+                    <span class="pricing-feature-icon">✓</span>
+                    Website Hosting & Management
+                  </div>
+                  <div class="pricing-feature">
+                    <span class="pricing-feature-icon">✓</span>
+                    Priority AI Assistant Access
+                  </div>
+                  <div class="pricing-feature">
+                    <span class="pricing-feature-icon">✓</span>
+                    Advanced Code Generation
+                  </div>
+                </div>
+                <button
+                  class="pricing-button-primary"
+                  id="pricingButtonPrimary"
+                  onclick="ui.showPaymentModal()"
+                >
+                  Get Premium
+                </button>
+              </div>
+            </div>
+
+            <!-- User Profile Button (only show if signed in) -->
+            <button
+              class="user-profile-btn"
+              id="userProfileBtn"
+              onclick="auth.toggleUserMenu()"
+              style="display: none"
+            >
+              <!-- Profile picture will be inserted here -->
+            </button>
+            <div class="user-menu" id="userMenu">
+              <div class="user-menu-item" onclick="ui.openContact()">
+                Contact
+              </div>
+              <div
+                class="user-menu-item"
+                onclick="ui.openSettingsWithTransition()"
+              >
+                Settings
+              </div>
+              <div
+                class="user-menu-item"
+                id="userAuthAction"
+                onclick="auth.handleUserAuth()"
+              >
+                Sign In / Sign Up
+              </div>
+              <div class="user-menu-item" onclick="ui.getApp()">Get App</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Chat Messages -->
+        <div class="chat-messages" id="chatMessages">
+          <div class="welcome">
+            <h1 id="welcomeTitle">Hello</h1>
+            <p>How can I help you today?</p>
+          </div>
+        </div>
+
+        <!-- Input Area -->
+        <div class="input-area" id="inputArea">
+          <div class="input-container">
+            <div class="input-tools" id="inputTools">
+              <button
+                class="tool-btn"
+                onclick="document.getElementById('fileInput').click()"
+                data-tooltip="Upload image or file"
+              >
+                📎 Upload
+              </button>
+              <button
+                class="tool-btn"
+                onclick="chat.takeScreenshot()"
+                data-tooltip="Take a screenshot"
+              >
+                📷 Screenshot
+              </button>
+              <button
+                class="tool-btn voice-btn"
+                onclick="ui.openConversation()"
+                data-tooltip="Start voice conversation"
+                id="voiceBtn"
+              >
+                🎙️ Voice
+              </button>
+              <input
+                type="file"
+                id="fileInput"
+                accept="image/*,.pdf,.doc,.docx,.txt"
+                onchange="chat.handleFileUpload(event)"
+              />
+            </div>
+            <div class="input-wrapper">
+              <textarea
+                id="messageInput"
+                placeholder="Message Dark..."
+                rows="1"
+                onkeypress="ui.handleKeyPress(event)"
+                oninput="ui.handleInputChange()"
+              ></textarea>
+              <button class="stop-btn" id="stopBtn" onclick="ui.stopTyping()">
+                Stop
+              </button>
+              <button
+                class="send-btn"
+                id="sendBtn"
+                onclick="chat.sendMessage()"
+              >
+                Send
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Payment Modal -->
+    <div class="payment-modal" id="paymentModal">
+      <div class="payment-content">
+        <button class="modal-close" onclick="ui.closePaymentModal()">×</button>
+
+        <!-- Payment Form -->
+        <div id="paymentForm">
+          <h2 class="payment-title">Dark AI Premium</h2>
+          <p class="payment-subtitle">Unlock the full potential of Dark AI</p>
+
+          <div class="payment-price">
+            $10<span style="font-size: 16px; color: #888">/month</span>
+          </div>
+
+          <div class="payment-features">
+            <div class="payment-feature">
+              <span class="payment-feature-icon">✓</span>
+              Unlimited AI Image Generation
+            </div>
+            <div class="payment-feature">
+              <span class="payment-feature-icon">✓</span>
+              Advanced Hacking Tools & Penetration Testing
+            </div>
+            <div class="payment-feature">
+              <span class="payment-feature-icon">✓</span>
+              Website Hosting & Management
+            </div>
+            <div class="payment-feature">
+              <span class="payment-feature-icon">✓</span>
+              Priority AI Assistant Access
+            </div>
+            <div class="payment-feature">
+              <span class="payment-feature-icon">✓</span>
+              Faster Code Generation
+            </div>
+          </div>
+
+          <div class="card-details">
+            <div class="form-group">
+              <label class="form-label" for="cardNumber">Card Number</label>
+              <input
+                type="text"
+                id="cardNumber"
+                class="form-input"
+                placeholder="1234 5678 9012 3456"
+                maxlength="19"
+              />
+              <div class="error-message" id="cardNumberError">
+                Please enter a valid card number
+              </div>
+            </div>
+
+            <div class="card-row">
+              <div class="form-group">
+                <label class="form-label" for="expiryDate">Expiry Date</label>
+                <input
+                  type="text"
+                  id="expiryDate"
+                  class="form-input"
+                  placeholder="MM/YY"
+                  maxlength="5"
+                />
+                <div class="error-message" id="expiryDateError">
+                  Please enter a valid expiry date
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="cvv">CVV</label>
+                <input
+                  type="text"
+                  id="cvv"
+                  class="form-input"
+                  placeholder="123"
+                  maxlength="3"
+                />
+                <div class="error-message" id="cvvError">
+                  Please enter a valid CVV
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="cardName">Name on Card</label>
+              <input
+                type="text"
+                id="cardName"
+                class="form-input"
+                placeholder="John Doe"
+              />
+              <div class="error-message" id="cardNameError">
+                Please enter the name on your card
+              </div>
+            </div>
+          </div>
+
+          <button class="payment-button" onclick="auth.processPayment()">
+            Complete Payment - $10
+          </button>
+        </div>
+
+        <!-- Payment Success -->
+        <div class="payment-success" id="paymentSuccess">
+          <div class="success-icon">✓</div>
+          <h2 class="payment-title">Payment Successful!</h2>
+          <p class="payment-subtitle">
+            Thank you for subscribing to Dark AI Premium
+          </p>
+          <p style="margin-top: 15px; color: #e0e0e0">
+            You now have access to all premium features.
+          </p>
+          <button
+            class="payment-button"
+            onclick="ui.closePaymentModal()"
+            style="margin-top: 20px"
+          >
+            Continue
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Settings Panel -->
+    <div class="settings-panel" id="settingsPanel">
+      <div class="settings-header" id="settingsHeader">
+        <div class="settings-title" id="settingsTitle">Settings</div>
+        <button class="settings-close" onclick="ui.closeSettings()">×</button>
+      </div>
+      <div class="settings-content" id="settingsContent">
+        <!-- Settings content will be dynamically loaded here -->
+      </div>
+    </div>
+
+    <!-- Initialize the application -->
+    <script>
+      // Add this function to handle smooth transitions
+      function navigateToSettings() {
+        const transition = document.getElementById("pageTransition");
+        transition.classList.add("active");
+
+        setTimeout(() => {
+          window.open("settings.html", "_self");
+        }, 500);
+      }
+
+      // Update the UI object to use the new transition function
+      if (typeof ui !== "undefined") {
+        ui.openSettingsWithTransition = navigateToSettings;
+      }
+
+      document.addEventListener("DOMContentLoaded", function () {
+        ui.startEntranceAnimation();
+        auth.loadUserProfile();
+        ui.makeSettingsDraggable();
+        ui.initEventListeners();
+
+        // Test backend connection on startup
+        setTimeout(() => {
+          api.testBackendConnection().then((isConnected) => {
+            if (!isConnected) {
+              console.warn(
+                "Backend connection failed - running in limited mode"
+              );
+            }
+          });
+        }, 1000);
+      });
+    </script>
+  </body>
+</html>

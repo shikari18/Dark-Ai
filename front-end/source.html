@@ -1,0 +1,1007 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Open Source Licenses - Dark AI</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: #000000;
+            color: #e0e0e0;
+            line-height: 1.6;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        body.light-mode {
+            background: #f5f5f5;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            border-bottom: 1px solid #222222;
+            margin-bottom: 30px;
+        }
+
+        body.light-mode .header {
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: bold;
+            font-size: 24px;
+            color: #c00;
+            text-decoration: none;
+        }
+
+        .back-btn {
+            padding: 10px 20px;
+            background: #222222;
+            border: 1px solid #333333;
+            color: #e0e0e0;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.2s, border-color 0.3s, color 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        body.light-mode .back-btn {
+            background: #f0f0f0;
+            border: 1px solid #d0d0d0;
+            color: #333;
+        }
+
+        .back-btn:hover {
+            background: #2a2a2a;
+        }
+
+        body.light-mode .back-btn:hover {
+            background: #e0e0e0;
+        }
+
+        /* Content */
+        .licenses-content {
+            background: #111111;
+            border-radius: 12px;
+            padding: 40px;
+            border: 1px solid #222222;
+            margin-bottom: 30px;
+            transition: background 0.3s, border-color 0.3s;
+        }
+
+        body.light-mode .licenses-content {
+            background: #ffffff;
+            border: 1px solid #e0e0e0;
+        }
+
+        .licenses-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .licenses-title {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: #e0e0e0;
+            transition: color 0.3s;
+        }
+
+        body.light-mode .licenses-title {
+            color: #333;
+        }
+
+        .licenses-subtitle {
+            font-size: 18px;
+            color: #888;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .last-updated {
+            text-align: center;
+            color: #c00;
+            font-weight: 600;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        /* Search and Filter */
+        .search-filter {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .search-box {
+            flex: 1;
+            min-width: 250px;
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 12px 40px 12px 15px;
+            background: #222222;
+            border: 1px solid #333333;
+            border-radius: 6px;
+            color: #e0e0e0;
+            font-size: 14px;
+            transition: border-color 0.3s, background 0.3s;
+        }
+
+        body.light-mode .search-input {
+            background: #f0f0f0;
+            border: 1px solid #d0d0d0;
+            color: #333;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #c00;
+            background: #2a2a2a;
+        }
+
+        body.light-mode .search-input:focus {
+            background: #ffffff;
+        }
+
+        .search-icon {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #888;
+        }
+
+        .license-filter {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 8px 16px;
+            background: #222222;
+            border: 1px solid #333333;
+            color: #e0e0e0;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.2s;
+        }
+
+        body.light-mode .filter-btn {
+            background: #f0f0f0;
+            border: 1px solid #d0d0d0;
+            color: #333;
+        }
+
+        .filter-btn:hover {
+            background: #2a2a2a;
+        }
+
+        body.light-mode .filter-btn:hover {
+            background: #e0e0e0;
+        }
+
+        .filter-btn.active {
+            background: #c00;
+            border-color: #c00;
+            color: white;
+        }
+
+        /* License Cards */
+        .license-cards {
+            display: grid;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .license-card {
+            background: #222222;
+            border-radius: 8px;
+            padding: 20px;
+            border: 1px solid #333333;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        body.light-mode .license-card {
+            background: #f0f0f0;
+            border: 1px solid #e0e0e0;
+        }
+
+        .license-card:hover {
+            border-color: #c00;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(192, 0, 0, 0.1);
+        }
+
+        .license-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+
+        .license-name {
+            font-size: 18px;
+            font-weight: 600;
+            color: #e0e0e0;
+            margin-bottom: 5px;
+            transition: color 0.3s;
+        }
+
+        body.light-mode .license-name {
+            color: #333;
+        }
+
+        .license-badge {
+            padding: 4px 8px;
+            background: #c00;
+            color: white;
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .license-meta {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 10px;
+            font-size: 13px;
+            color: #888;
+        }
+
+        .license-version {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .license-description {
+            color: #b0b0b0;
+            margin-bottom: 15px;
+            font-size: 14px;
+            transition: color 0.3s;
+        }
+
+        body.light-mode .license-description {
+            color: #666;
+        }
+
+        .license-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #333333;
+            transition: border-color 0.3s;
+        }
+
+        body.light-mode .license-footer {
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .license-links {
+            display: flex;
+            gap: 10px;
+        }
+
+        .license-link {
+            padding: 6px 12px;
+            background: #333333;
+            border: 1px solid #444444;
+            color: #e0e0e0;
+            border-radius: 4px;
+            text-decoration: none;
+            font-size: 12px;
+            transition: all 0.2s;
+        }
+
+        body.light-mode .license-link {
+            background: #e0e0e0;
+            border: 1px solid #d0d0d0;
+            color: #333;
+        }
+
+        .license-link:hover {
+            background: #c00;
+            border-color: #c00;
+            color: white;
+        }
+
+        /* License Details Modal */
+        .license-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 20px;
+        }
+
+        .license-modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: #111111;
+            border-radius: 12px;
+            padding: 30px;
+            width: 90%;
+            max-width: 800px;
+            max-height: 80vh;
+            border: 1px solid #333333;
+            transition: background 0.3s, border-color 0.3s;
+            position: relative;
+            overflow-y: auto;
+        }
+
+        body.light-mode .modal-content {
+            background: #ffffff;
+            border: 1px solid #e0e0e0;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            color: #888;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 4px;
+            transition: background 0.2s, color 0.2s;
+        }
+
+        .modal-close:hover {
+            background: #333333;
+            color: #e0e0e0;
+        }
+
+        body.light-mode .modal-close:hover {
+            background: #f0f0f0;
+            color: #333;
+        }
+
+        .modal-header {
+            margin-bottom: 20px;
+            padding-right: 40px;
+        }
+
+        .modal-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 5px;
+            color: #e0e0e0;
+            transition: color 0.3s;
+        }
+
+        body.light-mode .modal-title {
+            color: #333;
+        }
+
+        .modal-subtitle {
+            color: #888;
+            font-size: 14px;
+        }
+
+        .license-text {
+            background: #222222;
+            border-radius: 6px;
+            padding: 20px;
+            margin-top: 20px;
+            max-height: 400px;
+            overflow-y: auto;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 12px;
+            line-height: 1.5;
+            color: #b0b0b0;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        body.light-mode .license-text {
+            background: #f8f8f8;
+            color: #555;
+        }
+
+        /* Stats Section */
+        .stats-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: #222222;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            border: 1px solid #333333;
+            transition: background 0.3s, border-color 0.3s;
+        }
+
+        body.light-mode .stat-card {
+            background: #f0f0f0;
+            border: 1px solid #e0e0e0;
+        }
+
+        .stat-number {
+            font-size: 32px;
+            font-weight: 700;
+            color: #c00;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: #888;
+        }
+
+        /* Theme Toggle */
+        .theme-toggle {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #222222;
+            border: 1px solid #333333;
+            color: #e0e0e0;
+            padding: 10px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.3s, border-color 0.3s, color 0.3s;
+            z-index: 100;
+        }
+
+        body.light-mode .theme-toggle {
+            background: #f0f0f0;
+            border: 1px solid #d0d0d0;
+            color: #333;
+        }
+
+        .theme-toggle:hover {
+            background: #2a2a2a;
+        }
+
+        body.light-mode .theme-toggle:hover {
+            background: #e0e0e0;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #111111;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #c00;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #ff4d4d;
+        }
+
+        body.light-mode ::-webkit-scrollbar-track {
+            background: #f0f0f0;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 20px 0;
+            color: #888;
+            font-size: 14px;
+            border-top: 1px solid #222222;
+            margin-top: 40px;
+            transition: color 0.3s, border-color 0.3s;
+        }
+
+        body.light-mode .footer {
+            border-top: 1px solid #e0e0e0;
+            color: #666;
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+
+            .licenses-content {
+                padding: 20px;
+            }
+
+            .licenses-title {
+                font-size: 24px;
+            }
+
+            .licenses-subtitle {
+                font-size: 16px;
+            }
+
+            .header {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+
+            .search-filter {
+                flex-direction: column;
+            }
+
+            .license-header {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .license-footer {
+                flex-direction: column;
+                gap: 15px;
+                align-items: flex-start;
+            }
+
+            .license-links {
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            .stats-section {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .licenses-content {
+                padding: 15px;
+            }
+
+            .modal-content {
+                padding: 20px;
+            }
+
+            .license-text {
+                padding: 15px;
+                font-size: 11px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <a href="index.html" class="logo">DARK AI</a>
+            <a href="settings.html" class="back-btn">← Back to Settings</a>
+        </div>
+
+        <!-- Licenses Content -->
+        <div class="licenses-content">
+            <div class="licenses-header">
+                <h1 class="licenses-title">Open Source Licenses</h1>
+                <p class="licenses-subtitle">Dark AI is built upon the work of amazing open source projects. Here are the licenses for the software we use.</p>
+            </div>
+
+            <div class="last-updated">Last Updated: March 15, 2024</div>
+
+            <!-- Stats Section -->
+            <div class="stats-section">
+                <div class="stat-card">
+                    <div class="stat-number">24</div>
+                    <div class="stat-label">Open Source Projects</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">8</div>
+                    <div class="stat-label">Different Licenses</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">100%</div>
+                    <div class="stat-label">Compliant</div>
+                </div>
+            </div>
+
+            <!-- Search and Filter -->
+            <div class="search-filter">
+                <div class="search-box">
+                    <input type="text" class="search-input" id="searchInput" placeholder="Search libraries and licenses...">
+                    <span class="search-icon">🔍</span>
+                </div>
+                <div class="license-filter">
+                    <button class="filter-btn active" data-filter="all">All</button>
+                    <button class="filter-btn" data-filter="mit">MIT</button>
+                    <button class="filter-btn" data-filter="apache">Apache-2.0</button>
+                    <button class="filter-btn" data-filter="bsd">BSD</button>
+                    <button class="filter-btn" data-filter="gpl">GPL</button>
+                </div>
+            </div>
+
+            <!-- License Cards -->
+            <div class="license-cards" id="licenseCards">
+                <!-- Cards will be populated by JavaScript -->
+            </div>
+
+            <!-- Attribution -->
+            <div style="text-align: center; margin-top: 40px; padding-top: 20px; border-top: 1px solid #333333;">
+                <p style="color: #888; font-size: 14px;">
+                    We're grateful to all the open source contributors who make Dark AI possible.
+                    Thank you for your incredible work! 🙏
+                </p>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p>&copy; 2024 Dark AI. All rights reserved. | Built with Open Source</p>
+        </div>
+    </div>
+
+    <!-- License Details Modal -->
+    <div class="license-modal" id="licenseModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal()">×</button>
+            <div class="modal-header">
+                <h2 class="modal-title" id="modalTitle">License Name</h2>
+                <p class="modal-subtitle" id="modalSubtitle">Version • License Type</p>
+            </div>
+            <div class="license-text" id="licenseText">
+                Loading license text...
+            </div>
+        </div>
+    </div>
+
+    <!-- Theme Toggle -->
+    <button class="theme-toggle" onclick="toggleTheme()">Toggle Theme</button>
+
+    <script>
+        // Sample open source libraries data
+        const libraries = [
+            {
+                id: 1,
+                name: "React",
+                version: "18.2.0",
+                license: "MIT",
+                description: "A JavaScript library for building user interfaces",
+                author: "Facebook",
+                homepage: "https://reactjs.org",
+                repository: "https://github.com/facebook/react",
+                licenseText: `MIT License
+
+Copyright (c) Facebook, Inc. and its affiliates.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.`
+            },
+            {
+                id: 2,
+                name: "TensorFlow.js",
+                version: "4.10.0",
+                license: "Apache-2.0",
+                description: "A library for machine learning in JavaScript",
+                author: "Google",
+                homepage: "https://www.tensorflow.org/js",
+                repository: "https://github.com/tensorflow/tfjs",
+                licenseText: `Apache License
+Version 2.0, January 2004
+http://www.apache.org/licenses/
+
+TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION
+
+1. Definitions.
+
+"License" shall mean the terms and conditions for use, reproduction, and distribution as defined by Sections 1 through 9 of this document.
+
+"Licensor" shall mean the copyright owner or entity authorized by the copyright owner that is granting the License.
+
+"Legal Entity" shall mean the union of the acting entity and all other entities that control, are controlled by, or are under common control with that entity...
+
+[Full Apache 2.0 license text continues...]`
+            },
+            {
+                id: 3,
+                name: "Express.js",
+                version: "4.18.2",
+                license: "MIT",
+                description: "Fast, unopinionated, minimalist web framework for Node.js",
+                author: "TJ Holowaychuk",
+                homepage: "https://expressjs.com",
+                repository: "https://github.com/expressjs/express",
+                licenseText: `MIT License
+
+Copyright (c) 2009-2014 TJ Holowaychuk <tj@vision-media.ca>
+Copyright (c) 2013-2014 Roman Shtylman <shtylman+expressjs@gmail.com>
+Copyright (c) 2014-2015 Douglas Christopher Wilson <doug@somethingdoug.com>
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+[Standard MIT license terms continue...]`
+            },
+            {
+                id: 4,
+                name: "MongoDB Node.js Driver",
+                version: "5.7.0",
+                license: "Apache-2.0",
+                description: "The official MongoDB driver for Node.js",
+                author: "MongoDB",
+                homepage: "https://mongodb.github.io/node-mongodb-native",
+                repository: "https://github.com/mongodb/node-mongodb-native",
+                licenseText: `Apache License
+Version 2.0, January 2004
+http://www.apache.org/licenses/
+
+[Full Apache 2.0 license text...]`
+            },
+            {
+                id: 5,
+                name: "Socket.IO",
+                version: "4.7.2",
+                license: "MIT",
+                description: "Realtime application framework for Node.js",
+                author: "Guillermo Rauch",
+                homepage: "https://socket.io",
+                repository: "https://github.com/socketio/socket.io",
+                licenseText: `MIT License
+
+Copyright (c) 2014-2023 Guillermo Rauch
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+[Standard MIT license terms continue...]`
+            },
+            {
+                id: 6,
+                name: "OpenAI Node.js Library",
+                version: "4.20.1",
+                license: "MIT",
+                description: "Node.js library for the OpenAI API",
+                author: "OpenAI",
+                homepage: "https://openai.com",
+                repository: "https://github.com/openai/openai-node",
+                licenseText: `MIT License
+
+Copyright (c) 2023 OpenAI
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+[Standard MIT license terms continue...]`
+            },
+            {
+                id: 7,
+                name: "WebRTC",
+                version: "1.0.0",
+                license: "BSD-3-Clause",
+                description: "Web Real-Time Communication for voice and video",
+                author: "W3C and IETF",
+                homepage: "https://webrtc.org",
+                repository: "https://github.com/webrtc",
+                licenseText: `BSD 3-Clause License
+
+Copyright (c) 2011, The WebRTC project authors. All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+
+1. Redistributions of source code must retain the above copyright notice, this
+   list of conditions and the following disclaimer.
+
+2. Redistributions in binary form must reproduce the above copyright notice,
+   this list of conditions and the following disclaimer in the documentation
+   and/or other materials provided with the distribution.
+
+3. Neither the name of the copyright holder nor the names of its
+   contributors may be used to endorse or promote products derived from
+   this software without specific prior written permission.
+
+[Standard BSD 3-Clause terms continue...]`
+            },
+            {
+                id: 8,
+                name: "FFmpeg",
+                version: "6.0",
+                license: "LGPL-2.1",
+                description: "A complete, cross-platform solution to record, convert and stream audio and video",
+                author: "FFmpeg Team",
+                homepage: "https://ffmpeg.org",
+                repository: "https://github.com/FFmpeg/FFmpeg",
+                licenseText: `GNU LESSER GENERAL PUBLIC LICENSE
+Version 2.1, February 1999
+
+Copyright (C) 1991, 1999 Free Software Foundation, Inc.
+51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+Everyone is permitted to copy and distribute verbatim copies
+of this license document, but changing it is not allowed.
+
+[This is the first released version of the Lesser GPL. It also counts
+ as the successor of the GNU Library Public License, version 2, hence
+ the version number 2.1.]
+
+[Full LGPL-2.1 license text continues...]`
+            }
+        ];
+
+        // Theme toggle functionality
+        function toggleTheme() {
+            document.body.classList.toggle('light-mode');
+            const isLightMode = document.body.classList.contains('light-mode');
+            localStorage.setItem('dark-theme', isLightMode ? 'light' : 'dark');
+        }
+
+        // Initialize theme from localStorage
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedTheme = localStorage.getItem('dark-theme') || 'dark';
+            if (savedTheme === 'light') {
+                document.body.classList.add('light-mode');
+            }
+            
+            renderLicenseCards(libraries);
+            setupEventListeners();
+        });
+
+        // Render license cards
+        function renderLicenseCards(librariesToRender) {
+            const container = document.getElementById('licenseCards');
+            container.innerHTML = '';
+
+            librariesToRender.forEach(library => {
+                const card = document.createElement('div');
+                card.className = 'license-card';
+                card.setAttribute('data-license', library.license.toLowerCase());
+                card.innerHTML = `
+                    <div class="license-header">
+                        <div>
+                            <div class="license-name">${library.name}</div>
+                            <div class="license-meta">
+                                <span class="license-version">v${library.version}</span>
+                                <span>by ${library.author}</span>
+                            </div>
+                        </div>
+                        <div class="license-badge">${library.license}</div>
+                    </div>
+                    <div class="license-description">${library.description}</div>
+                    <div class="license-footer">
+                        <div class="license-links">
+                            <a href="${library.homepage}" class="license-link" target="_blank">Website</a>
+                            <a href="${library.repository}" class="license-link" target="_blank">Repository</a>
+                            <button class="license-link" onclick="viewLicense(${library.id})">View License</button>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        // Setup event listeners
+        function setupEventListeners() {
+            // Search functionality
+            document.getElementById('searchInput').addEventListener('input', function(e) {
+                const searchTerm = e.target.value.toLowerCase();
+                const filteredLibraries = libraries.filter(library => 
+                    library.name.toLowerCase().includes(searchTerm) ||
+                    library.description.toLowerCase().includes(searchTerm) ||
+                    library.license.toLowerCase().includes(searchTerm) ||
+                    library.author.toLowerCase().includes(searchTerm)
+                );
+                renderLicenseCards(filteredLibraries);
+            });
+
+            // Filter functionality
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    const filter = this.getAttribute('data-filter');
+                    let filteredLibraries = libraries;
+                    
+                    if (filter !== 'all') {
+                        filteredLibraries = libraries.filter(library => 
+                            library.license.toLowerCase().includes(filter)
+                        );
+                    }
+                    
+                    renderLicenseCards(filteredLibraries);
+                });
+            });
+        }
+
+        // View license details
+        function viewLicense(libraryId) {
+            const library = libraries.find(lib => lib.id === libraryId);
+            if (!library) return;
+
+            document.getElementById('modalTitle').textContent = `${library.name} License`;
+            document.getElementById('modalSubtitle').textContent = `v${library.version} • ${library.license}`;
+            document.getElementById('licenseText').textContent = library.licenseText;
+            document.getElementById('licenseModal').classList.add('active');
+        }
+
+        // Close modal
+        function closeModal() {
+            document.getElementById('licenseModal').classList.remove('active');
+        }
+
+        // Close modal on outside click
+        document.getElementById('licenseModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+
+        // Close modal on Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeModal();
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,2191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dark - Sign In / Sign Up</title>
+    <link rel="icon" href="mylogo.jpg">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            user-select: none;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+                "Helvetica Neue", Arial, sans-serif;
+            background: #000000;
+            color: #e0e0e0;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Idle Animation Background */
+        .idle-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 1.5s ease-in-out;
+            pointer-events: none;
+        }
+
+        .idle-animation.active {
+            opacity: 1;
+        }
+
+        .idle-particle {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(192, 0, 0, 0.8), transparent);
+            box-shadow: 0 0 20px rgba(192, 0, 0, 0.6);
+        }
+
+        .idle-trail {
+            position: absolute;
+            width: 100px;
+            height: 2px;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(192, 0, 0, 0.6),
+                transparent
+            );
+            transform-origin: left center;
+        }
+
+        .idle-sharingan {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            border: 2px solid rgba(192, 0, 0, 0.7);
+            border-radius: 50%;
+            animation: idleSpin 15s linear infinite;
+        }
+
+        .idle-sharingan::before {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 50px;
+            height: 50px;
+            border: 1px solid rgba(192, 0, 0, 0.5);
+            border-radius: 50%;
+        }
+
+        .idle-sharingan::after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 15px;
+            height: 15px;
+            background: rgba(192, 0, 0, 0.6);
+            border-radius: 50%;
+        }
+
+        .idle-tomoe {
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            background: rgba(192, 0, 0, 0.8);
+            border-radius: 50%;
+            top: -7px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .idle-tomoe::before {
+            content: "";
+            position: absolute;
+            width: 5px;
+            height: 5px;
+            background: #000;
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .idle-tomoe:nth-child(1) {
+            transform: translateX(-50%) rotate(0deg) translateY(-30px) rotate(0deg);
+        }
+
+        .idle-tomoe:nth-child(2) {
+            transform: translateX(-50%) rotate(120deg) translateY(-30px)
+                rotate(-120deg);
+        }
+
+        .idle-tomoe:nth-child(3) {
+            transform: translateX(-50%) rotate(240deg) translateY(-30px)
+                rotate(-240deg);
+        }
+
+        @keyframes idleSpin {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Entrance Animation */
+        .entrance-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            opacity: 1;
+            transition: opacity 1s ease-in-out;
+        }
+
+        .entrance-animation.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .sharingan-container {
+            position: relative;
+            width: 200px;
+            height: 200px;
+        }
+
+        .sharingan {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 120px;
+            height: 120px;
+            border: 3px solid #c00;
+            border-radius: 50%;
+            animation: sharinganSpin 3s linear infinite;
+        }
+
+        .sharingan::before {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80px;
+            height: 80px;
+            border: 2px solid #c00;
+            border-radius: 50%;
+        }
+
+        .sharingan::after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 20px;
+            height: 20px;
+            background: #c00;
+            border-radius: 50%;
+        }
+
+        .tomoe {
+            position: absolute;
+            width: 25px;
+            height: 25px;
+            background: #c00;
+            border-radius: 50%;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .tomoe::before {
+            content: "";
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: #000;
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .tomoe:nth-child(1) {
+            transform: translateX(-50%) rotate(0deg) translateY(-45px) rotate(0deg);
+        }
+
+        .tomoe:nth-child(2) {
+            transform: translateX(-50%) rotate(120deg) translateY(-45px)
+                rotate(-120deg);
+        }
+
+        .tomoe:nth-child(3) {
+            transform: translateX(-50%) rotate(240deg) translateY(-45px)
+                rotate(-240deg);
+        }
+
+        .dark-logo {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 24px;
+            font-weight: bold;
+            color: #fff;
+            opacity: 0;
+            animation: logoAppear 2s ease-in-out 2s forwards;
+            text-shadow: 0 0 10px #c00, 0 0 20px #c00;
+        }
+
+        .glow-effect {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(
+                circle,
+                rgba(192, 0, 0, 0.3) 0%,
+                rgba(192, 0, 0, 0) 70%
+            );
+            border-radius: 50%;
+            opacity: 0;
+            animation: glowPulse 2s ease-in-out 1.5s forwards;
+        }
+
+        @keyframes sharinganSpin {
+            0% {
+                transform: translate(-50%, -50%) rotate(0deg) scale(0.5);
+                opacity: 0;
+            }
+            50% {
+                transform: translate(-50%, -50%) rotate(180deg) scale(1.2);
+                opacity: 1;
+            }
+            100% {
+                transform: translate(-50%, -50%) rotate(360deg) scale(1);
+                opacity: 1;
+            }
+        }
+
+        @keyframes logoAppear {
+            0% {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(3);
+            }
+            70% {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(0.9);
+            }
+            100% {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1);
+            }
+        }
+
+        @keyframes glowPulse {
+            0% {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(0.5);
+            }
+            50% {
+                opacity: 0.8;
+                transform: translate(-50%, -50%) scale(1.2);
+            }
+            100% {
+                opacity: 0.4;
+                transform: translate(-50%, -50%) scale(1);
+            }
+        }
+
+        /* Login Container */
+        .login-container {
+            display: flex;
+            height: 100vh;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+        }
+
+        .login-container.visible {
+            opacity: 1;
+        }
+
+        .login-left {
+            flex: 1;
+            background: #000000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 40px;
+        }
+
+        .login-right {
+            flex: 1;
+            background: #111111;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 40px;
+        }
+
+        .login-logo {
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: #e0e0e0;
+        }
+
+        .login-logo span {
+            color: #c00;
+        }
+
+        .login-subtitle {
+            font-size: 18px;
+            color: #888;
+            margin-bottom: 40px;
+            text-align: center;
+            max-width: 400px;
+        }
+
+        .login-form {
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #b0b0b0;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px 16px;
+            background: #222222;
+            border: 1px solid #333333;
+            border-radius: 8px;
+            color: #e0e0e0;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #c00;
+            box-shadow: 0 0 0 2px rgba(192, 0, 0, 0.2);
+        }
+
+        .form-input.error {
+            border-color: #c00;
+        }
+
+        .error-message {
+            color: #c00;
+            font-size: 12px;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        .form-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .remember-me {
+            display: flex;
+            align-items: center;
+        }
+
+        .remember-checkbox {
+            margin-right: 8px;
+        }
+
+        .forgot-password {
+            color: #c00;
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.3s;
+            cursor: pointer;
+        }
+
+        .forgot-password:hover {
+            color: #ff4d4d;
+        }
+
+        .login-button {
+            width: 100%;
+            padding: 14px;
+            background: #c00;
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .login-button:hover {
+            background: #ff4d4d;
+        }
+
+        .login-divider {
+            display: flex;
+            align-items: center;
+            margin: 30px 0;
+            color: #888;
+            font-size: 14px;
+        }
+
+        .login-divider::before,
+        .login-divider::after {
+            content: "";
+            flex: 1;
+            height: 1px;
+            background: #333333;
+            margin: 0 10px;
+        }
+
+        .social-login {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .social-button {
+            flex: 1;
+            padding: 12px;
+            background: #222222;
+            border: 1px solid #333333;
+            border-radius: 8px;
+            color: #e0e0e0;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .social-button:hover {
+            background: #333333;
+        }
+
+        .social-icon {
+            margin-right: 8px;
+            width: 18px;
+            height: 18px;
+        }
+
+        .switch-form {
+            text-align: center;
+            color: #888;
+            font-size: 14px;
+        }
+
+        .switch-form a {
+            color: #c00;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+            cursor: pointer;
+        }
+
+        .switch-form a:hover {
+            color: #ff4d4d;
+        }
+
+        .login-features {
+            max-width: 500px;
+        }
+
+        .feature {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 30px;
+        }
+
+        .feature-icon {
+            font-size: 24px;
+            margin-right: 15px;
+            color: #c00;
+        }
+
+        .feature-content h3 {
+            font-size: 18px;
+            margin-bottom: 8px;
+            color: #e0e0e0;
+        }
+
+        .feature-content p {
+            font-size: 14px;
+            color: #888;
+            line-height: 1.5;
+        }
+
+        .avatar-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .avatar-preview {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: #333333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            border: 2px solid #444444;
+        }
+
+        .avatar-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .avatar-upload-btn {
+            padding: 8px 16px;
+            background: #333333;
+            border: 1px solid #444444;
+            border-radius: 6px;
+            color: #e0e0e0;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .avatar-upload-btn:hover {
+            background: #444444;
+        }
+
+        .avatar-upload-text {
+            font-size: 12px;
+            color: #888;
+            margin-top: 5px;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        /* Forgot Password Form */
+        .forgot-password-form {
+            display: none;
+            text-align: center;
+        }
+
+        .forgot-password-form.active {
+            display: block;
+        }
+
+        .back-to-login {
+            color: #c00;
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.3s;
+            cursor: pointer;
+            display: inline-block;
+            margin-top: 20px;
+        }
+
+        .back-to-login:hover {
+            color: #ff4d4d;
+        }
+
+        .success-message {
+            color: #4caf50;
+            font-size: 14px;
+            margin-top: 15px;
+            display: none;
+        }
+
+        .success-message.show {
+            display: block;
+        }
+
+        /* Email Verification Form */
+        .email-verification-form {
+            display: none;
+            text-align: center;
+        }
+
+        .email-verification-form.active {
+            display: block;
+        }
+
+        .verification-code-container {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .verification-input {
+            width: 45px;
+            height: 55px;
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            background: #222222;
+            border: 1px solid #333333;
+            border-radius: 8px;
+            color: #e0e0e0;
+            transition: all 0.3s;
+        }
+
+        .verification-input:focus {
+            outline: none;
+            border-color: #c00;
+            box-shadow: 0 0 0 2px rgba(192, 0, 0, 0.2);
+        }
+
+        .verification-input.error {
+            border-color: #c00;
+            animation: shake 0.5s ease-in-out;
+        }
+
+        .verification-info {
+            color: #888;
+            font-size: 14px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .resend-code {
+            color: #c00;
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.3s;
+            cursor: pointer;
+            display: inline-block;
+            margin-top: 10px;
+        }
+
+        .resend-code:hover {
+            color: #ff4d4d;
+        }
+
+        .resend-code.disabled {
+            color: #666;
+            cursor: not-allowed;
+        }
+
+        .resend-code.disabled:hover {
+            color: #666;
+        }
+
+        .resend-timer {
+            color: #888;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+            20%, 40%, 60%, 80% { transform: translateX(5px); }
+        }
+
+        /* Mobile About Us Button and Modal */
+        .mobile-about-btn {
+            display: none;
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            background: #c00;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 15px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 12px rgba(192, 0, 0, 0.3);
+        }
+
+        .mobile-about-btn:hover {
+            background: #ff4d4d;
+            transform: translateY(-2px);
+        }
+
+        .mobile-about-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 2000;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .mobile-about-modal.active {
+            display: block;
+        }
+
+        .mobile-about-content {
+            background: #111111;
+            border-radius: 12px;
+            padding: 30px;
+            max-width: 600px;
+            margin: 40px auto;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .mobile-about-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #333;
+        }
+
+        .mobile-about-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #e0e0e0;
+        }
+
+        .mobile-about-title span {
+            color: #c00;
+        }
+
+        .mobile-about-close {
+            background: none;
+            border: none;
+            color: #888;
+            font-size: 24px;
+            cursor: pointer;
+            transition: color 0.3s;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+
+        .mobile-about-close:hover {
+            color: #c00;
+            background: rgba(192, 0, 0, 0.1);
+        }
+
+        .mobile-feature {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 25px;
+            padding: 15px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            transition: background 0.3s;
+        }
+
+        .mobile-feature:hover {
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .mobile-feature-icon {
+            font-size: 20px;
+            margin-right: 15px;
+            color: #c00;
+            flex-shrink: 0;
+        }
+
+        .mobile-feature-content h3 {
+            font-size: 16px;
+            margin-bottom: 8px;
+            color: #e0e0e0;
+        }
+
+        .mobile-feature-content p {
+            font-size: 14px;
+            color: #888;
+            line-height: 1.5;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .login-container {
+                flex-direction: column;
+            }
+
+            .login-left {
+                display: none;
+            }
+
+            .login-right {
+                padding: 30px 20px;
+                width: 100%;
+                justify-content: flex-start;
+                padding-top: 80px;
+            }
+
+            .login-logo {
+                font-size: 36px;
+            }
+
+            .login-subtitle {
+                font-size: 16px;
+            }
+
+            .social-login {
+                flex-direction: column;
+            }
+
+            .verification-code-container {
+                justify-content: space-around;
+            }
+
+            .verification-input {
+                width: 40px;
+                height: 50px;
+                font-size: 20px;
+            }
+
+            .mobile-about-btn {
+                display: block;
+            }
+        }
+
+        /* Mobile adjustments */
+        @media (max-width: 480px) {
+            .login-logo {
+                font-size: 32px;
+            }
+
+            .login-subtitle {
+                font-size: 14px;
+            }
+
+            .form-input {
+                padding: 10px 14px;
+                font-size: 14px;
+            }
+
+            .login-button {
+                padding: 12px;
+                font-size: 14px;
+            }
+
+            .verification-input {
+                width: 35px;
+                height: 45px;
+                font-size: 18px;
+            }
+
+            .mobile-about-content {
+                padding: 20px;
+                margin: 20px auto;
+            }
+
+            .mobile-about-title {
+                font-size: 20px;
+            }
+
+            .mobile-feature {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .mobile-feature-icon {
+                margin-right: 0;
+                margin-bottom: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Idle Animation Background -->
+    <div class="idle-animation" id="idleAnimation"></div>
+
+    <!-- Entrance Animation -->
+    <div class="entrance-animation" id="entranceAnimation">
+        <div class="sharingan-container">
+            <div class="glow-effect"></div>
+            <div class="sharingan">
+                <div class="tomoe"></div>
+                <div class="tomoe"></div>
+                <div class="tomoe"></div>
+            </div>
+            <div class="dark-logo"><span style="user-select: none">DARK</span></div>
+        </div>
+    </div>
+
+    <!-- Mobile About Us Button -->
+    <button class="mobile-about-btn" id="mobileAboutBtn">About Us</button>
+
+    <!-- Mobile About Us Modal -->
+    <div class="mobile-about-modal" id="mobileAboutModal">
+        <div class="mobile-about-content">
+            <div class="mobile-about-header">
+                <h2 class="mobile-about-title">Dark<span>AI</span> Features</h2>
+                <button class="mobile-about-close" id="mobileAboutClose">&times;</button>
+            </div>
+            
+            <div class="mobile-features-list">
+                <div class="mobile-feature">
+                    <div class="mobile-feature-icon">🤖</div>
+                    <div class="mobile-feature-content">
+                        <h3>Advanced AI Assistant</h3>
+                        <p>
+                            Experience the power of Dark AI with intelligent conversations,
+                            code generation, creative storytelling, penetration testing,
+                            ethical hacking tools, and AI image generation capabilities.
+                        </p>
+                    </div>
+                </div>
+                <div class="mobile-feature">
+                    <div class="mobile-feature-icon">🔒</div>
+                    <div class="mobile-feature-content">
+                        <h3>Secure & Private</h3>
+                        <p>
+                            Your conversations are encrypted and private. We never share
+                            your data with third parties.
+                        </p>
+                    </div>
+                </div>
+                <div class="mobile-feature">
+                    <div class="mobile-feature-icon">💬</div>
+                    <div class="mobile-feature-content">
+                        <h3>Real-time Conversations</h3>
+                        <p>
+                            Chat naturally with Dark AI as if you're talking to a
+                            knowledgeable friend who's always available. You and Dark can
+                            have actual conversations together.
+                        </p>
+                    </div>
+                </div>
+                <div class="mobile-feature">
+                    <div class="mobile-feature-icon">🛡️</div>
+                    <div class="mobile-feature-content">
+                        <h3>Security Tools</h3>
+                        <p>
+                            Access ethical hacking utilities, vulnerability scanning, and
+                            penetration testing guidance for educational purposes.
+                        </p>
+                    </div>
+                </div>
+                <div class="mobile-feature">
+                    <div class="mobile-feature-icon">🎨</div>
+                    <div class="mobile-feature-content">
+                        <h3>Creative Generation</h3>
+                        <p>
+                            Generate stunning images, artwork, and visual content with our
+                            advanced AI image generation models.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Login Container -->
+    <div class="login-container" id="loginContainer">
+        <div class="login-left">
+            <div class="login-features">
+                <div class="feature">
+                    <div class="feature-icon">🤖</div>
+                    <div class="feature-content">
+                        <h3>Advanced AI Assistant</h3>
+                        <p>
+                            Experience the power of Dark AI with intelligent conversations,
+                            code generation, creative storytelling, penetration testing,
+                            ethical hacking tools, and AI image generation capabilities.
+                        </p>
+                    </div>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">🔒</div>
+                    <div class="feature-content">
+                        <h3>Secure & Private</h3>
+                        <p>
+                            Your conversations are encrypted and private. We never share
+                            your data with third parties.
+                        </p>
+                    </div>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">💬</div>
+                    <div class="feature-content">
+                        <h3>Real-time Conversations</h3>
+                        <p>
+                            Chat naturally with Dark AI as if you're talking to a
+                            knowledgeable friend who's always available. You and Dark can
+                            have actual conversations together.
+                        </p>
+                    </div>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">🛡️</div>
+                    <div class="feature-content">
+                        <h3>Security Tools</h3>
+                        <p>
+                            Access ethical hacking utilities, vulnerability scanning, and
+                            penetration testing guidance for educational purposes.
+                        </p>
+                    </div>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">🎨</div>
+                    <div class="feature-content">
+                        <h3>Creative Generation</h3>
+                        <p>
+                            Generate stunning images, artwork, and visual content with our
+                            advanced AI image generation models.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="login-right">
+            <div class="login-logo">Dark<span>AI</span></div>
+            <div class="login-subtitle" id="formSubtitle">
+                Sign in to continue your conversation with Dark
+            </div>
+
+            <div class="login-form">
+                <!-- Sign In Form (default) -->
+                <div id="signInForm">
+                    <div class="form-group">
+                        <label class="form-label" for="email">Email Address</label>
+                        <input
+                            type="email"
+                            id="email"
+                            class="form-input"
+                            placeholder="your.email@example.com"
+                        />
+                        <div class="error-message" id="emailError">
+                            Please enter your email address
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="password">Password</label>
+                        <input
+                            type="password"
+                            id="password"
+                            class="form-input"
+                            placeholder="Enter your password"
+                        />
+                        <div class="error-message" id="passwordError">
+                            Please enter your password
+                        </div>
+                        <div class="error-message" id="invalidCredentials">
+                            Invalid email or password
+                        </div>
+                        <div class="error-message" id="accountNotExist">
+                            No account exists with this email
+                        </div>
+                    </div>
+
+                    <div class="form-options">
+                        <div class="remember-me">
+                            <input
+                                type="checkbox"
+                                id="remember"
+                                class="remember-checkbox"
+                            />
+                            <label for="remember">Remember me</label>
+                        </div>
+                        <a class="forgot-password" onclick="showForgotPassword()"
+                            >Forgot password?</a
+                        >
+                    </div>
+
+                    <button class="login-button" onclick="signIn()">Sign In</button>
+
+                    <div class="login-divider">or continue with</div>
+
+                    <div class="social-login">
+                        <a
+                            href="https://accounts.google.com/o/oauth2/v2/auth?client_id=YOUR_GOOGLE_CLIENT_ID&redirect_uri=YOUR_REDIRECT_URI&response_type=code&scope=email%20profile"
+                            class="social-button"
+                        >
+                            <svg
+                                class="social-icon"
+                                viewBox="0 0 24 24"
+                                width="18"
+                                height="18"
+                            >
+                                <path
+                                    fill="#4285F4"
+                                    d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+                                />
+                                <path
+                                    fill="#34A853"
+                                    d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+                                />
+                                <path
+                                    fill="#FBBC05"
+                                    d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
+                                />
+                                <path
+                                    fill="#EA4335"
+                                    d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
+                                />
+                            </svg>
+                            Google
+                        </a>
+                        <a
+                            href="https://github.com/login/oauth/authorize?client_id=YOUR_GITHUB_CLIENT_ID&redirect_uri=YOUR_REDIRECT_URI&scope=user:email"
+                            class="social-button"
+                        >
+                            <svg
+                                class="social-icon"
+                                viewBox="0 0 24 24"
+                                width="18"
+                                height="18"
+                            >
+                                <path
+                                    fill="#FFFFFF"
+                                    d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"
+                                />
+                            </svg>
+                            GitHub
+                        </a>
+                    </div>
+
+                    <div class="switch-form">
+                        Don't have an account? <a onclick="switchToSignUp()">Sign up</a>
+                    </div>
+                </div>
+
+                <!-- Sign Up Form (hidden by default) -->
+                <div id="signUpForm" style="display: none">
+                    <div class="form-group">
+                        <label class="form-label" for="username"
+                            >Username (max 12 characters)</label
+                        >
+                        <input
+                            type="text"
+                            id="username"
+                            class="form-input"
+                            placeholder="Choose a username"
+                            maxlength="12"
+                        />
+                        <div class="error-message" id="usernameError">
+                            Please choose a username (max 12 characters)
+                        </div>
+                        <div class="error-message" id="usernameLengthError">
+                            Username must be 12 characters or less
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="signupEmail">Email Address</label>
+                        <input
+                            type="email"
+                            id="signupEmail"
+                            class="form-input"
+                            placeholder="your.email@example.com"
+                        />
+                        <div class="error-message" id="signupEmailError">
+                            Please enter your email address
+                        </div>
+                        <div class="error-message" id="emailExistsError">
+                            This email is already registered
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="signupPassword">Password</label>
+                        <input
+                            type="password"
+                            id="signupPassword"
+                            class="form-input"
+                            placeholder="Create a password"
+                        />
+                        <div class="error-message" id="signupPasswordError">
+                            Please create a password
+                        </div>
+                    </div>
+
+                    <div class="avatar-section">
+                        <div class="avatar-preview" id="avatarPreview">
+                            <img src="mylogo.jpg" alt="Default Avatar" />
+                        </div>
+                        <div>
+                            <button
+                                class="avatar-upload-btn"
+                                onclick="document.getElementById('avatarUpload').click()"
+                            >
+                                Upload Image
+                            </button>
+                            <div class="avatar-upload-text">Optional</div>
+                            <input
+                                type="file"
+                                id="avatarUpload"
+                                accept="image/*"
+                                onchange="handleAvatarUpload(event)"
+                            />
+                        </div>
+                    </div>
+
+                    <button class="login-button" onclick="startEmailVerification()">
+                        Sign Up
+                    </button>
+
+                    <div class="login-divider">or continue with</div>
+
+                    <div class="social-login">
+                        <a
+                            href="https://accounts.google.com/o/oauth2/v2/auth?client_id=YOUR_GOOGLE_CLIENT_ID&redirect_uri=YOUR_REDIRECT_URI&response_type=code&scope=email%20profile"
+                            class="social-button"
+                        >
+                            <svg
+                                class="social-icon"
+                                viewBox="0 0 24 24"
+                                width="18"
+                                height="18"
+                            >
+                                <path
+                                    fill="#4285F4"
+                                    d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+                                />
+                                <path
+                                    fill="#34A853"
+                                    d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+                                />
+                                <path
+                                    fill="#FBBC05"
+                                    d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
+                                />
+                                <path
+                                    fill="#EA4335"
+                                    d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
+                                />
+                            </svg>
+                            Google
+                        </a>
+                        <a
+                            href="https://github.com/login/oauth/authorize?client_id=YOUR_GITHUB_CLIENT_ID&redirect_uri=YOUR_REDIRECT_URI&scope=user:email"
+                            class="social-button"
+                        >
+                            <svg
+                                class="social-icon"
+                                viewBox="0 0 24 24"
+                                width="18"
+                                height="18"
+                            >
+                                <path
+                                    fill="#FFFFFF"
+                                    d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"
+                                />
+                            </svg>
+                            GitHub
+                        </a>
+                    </div>
+
+                    <div class="switch-form">
+                        Already have an account? <a onclick="switchToSignIn()">Sign in</a>
+                    </div>
+                </div>
+
+                <!-- Email Verification Form -->
+                <div class="email-verification-form" id="emailVerificationForm">
+                    <div class="form-group">
+                        <label class="form-label">Verification Code</label>
+                        <div class="verification-code-container" id="verificationCodeContainer">
+                            <input type="text" class="verification-input" maxlength="1" data-index="0" />
+                            <input type="text" class="verification-input" maxlength="1" data-index="1" />
+                            <input type="text" class="verification-input" maxlength="1" data-index="2" />
+                            <input type="text" class="verification-input" maxlength="1" data-index="3" />
+                            <input type="text" class="verification-input" maxlength="1" data-index="4" />
+                            <input type="text" class="verification-input" maxlength="1" data-index="5" />
+                        </div>
+                        <div class="error-message" id="verificationCodeError">
+                            Wrong verification code
+                        </div>
+                        <div class="verification-info">
+                            We've sent a 6-digit verification code to your email.
+                        </div>
+                    </div>
+
+                    <button class="login-button" onclick="verifyEmailAndSignUp()">
+                        Verify & Sign Up
+                    </button>
+
+                    <div class="resend-code" id="resendCodeButton" onclick="resendVerificationCode()">
+                        Resend code
+                    </div>
+                    <div class="resend-timer" id="resendTimer" style="display: none;">
+                        Resend code in <span id="countdown">60</span> seconds
+                    </div>
+
+                    <a class="back-to-login" onclick="backToSignUp()">← Back to Sign Up</a>
+                </div>
+
+                <!-- Forgot Password Form -->
+                <div class="forgot-password-form" id="forgotPasswordForm">
+                    <div class="form-group">
+                        <label class="form-label" for="forgotEmail">Email Address</label>
+                        <input
+                            type="email"
+                            id="forgotEmail"
+                            class="form-input"
+                            placeholder="your.email@example.com"
+                        />
+                        <div class="error-message" id="forgotEmailError">
+                            Please enter your email address
+                        </div>
+                        <div class="error-message" id="forgotEmailNotExist">
+                            No account linked to this email
+                        </div>
+                    </div>
+
+                    <button
+                        class="login-button"
+                        id="forgotPasswordButton"
+                        onclick="sendResetLink()"
+                    >
+                        Next
+                    </button>
+
+                    <div class="success-message" id="resetSuccessMessage">
+                        We've sent a password reset link to your email. Please check your
+                        inbox.
+                    </div>
+
+                    <a class="back-to-login" onclick="backToLogin()">← Back to Login</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Default avatar image (using your logo)
+        const defaultAvatar = "mylogo.jpg";
+
+        // Idle animation variables
+        let idleTimer;
+        let isIdle = false;
+        const IDLE_TIMEOUT = 30000; // 30 seconds
+
+        // Email verification variables
+        let verificationCode = "000000"; // Default verification code
+        let verificationEmail = "";
+        let pendingUserData = null;
+        let resendTimer = null;
+        let canResendCode = true;
+
+        // Initialize users database in localStorage if not exists
+        function initializeUsers() {
+            if (!localStorage.getItem("darkAIUsers")) {
+                const users = {};
+                localStorage.setItem("darkAIUsers", JSON.stringify(users));
+            }
+        }
+
+        // Clear all error messages
+        function clearAllErrors() {
+            const errorMessages = document.querySelectorAll(".error-message");
+            errorMessages.forEach((error) => {
+                error.classList.remove("show");
+            });
+
+            const inputs = document.querySelectorAll(".form-input");
+            inputs.forEach((input) => {
+                input.classList.remove("error");
+            });
+
+            const verificationInputs = document.querySelectorAll(".verification-input");
+            verificationInputs.forEach((input) => {
+                input.classList.remove("error");
+            });
+        }
+
+        // Show error for specific field
+        function showError(fieldId, errorId) {
+            document.getElementById(fieldId).classList.add("error");
+            document.getElementById(errorId).classList.add("show");
+        }
+
+        // Hide error for specific field
+        function hideError(fieldId, errorId) {
+            document.getElementById(fieldId).classList.remove("error");
+            document.getElementById(errorId).classList.remove("show");
+        }
+
+        // Validate email format
+        function isValidEmail(email) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailRegex.test(email);
+        }
+
+        // Reset idle timer
+        function resetIdleTimer() {
+            clearTimeout(idleTimer);
+            idleTimer = setTimeout(showIdleAnimation, IDLE_TIMEOUT);
+
+            // If animation is active, hide it
+            if (isIdle) {
+                hideIdleAnimation();
+            }
+        }
+
+        // Show idle animation
+        function showIdleAnimation() {
+            isIdle = true;
+            const idleAnimation = document.getElementById("idleAnimation");
+            idleAnimation.classList.add("active");
+
+            // Create multiple sharingans
+            createIdleSharinganElements();
+        }
+
+        // Hide idle animation
+        function hideIdleAnimation() {
+            isIdle = false;
+            const idleAnimation = document.getElementById("idleAnimation");
+            idleAnimation.classList.remove("active");
+
+            // Clear existing elements
+            idleAnimation.innerHTML = "";
+        }
+
+        // Create idle sharingan elements
+        function createIdleSharinganElements() {
+            const idleAnimation = document.getElementById("idleAnimation");
+
+            // Create 3-5 sharingans at random positions
+            const numSharingan = Math.floor(Math.random() * 3) + 3;
+
+            for (let i = 0; i < numSharingan; i++) {
+                const sharingan = document.createElement("div");
+                sharingan.className = "idle-sharingan";
+
+                // Random position
+                const x = Math.random() * 80 + 10; // 10% to 90%
+                const y = Math.random() * 80 + 10; // 10% to 90%
+                sharingan.style.left = `${x}%`;
+                sharingan.style.top = `${y}%`;
+
+                // Random size
+                const size = Math.random() * 40 + 40; // 40px to 80px
+                sharingan.style.width = `${size}px`;
+                sharingan.style.height = `${size}px`;
+
+                // Add tomoe
+                for (let j = 0; j < 3; j++) {
+                    const tomoe = document.createElement("div");
+                    tomoe.className = "idle-tomoe";
+                    sharingan.appendChild(tomoe);
+                }
+
+                idleAnimation.appendChild(sharingan);
+            }
+
+            // Create particles
+            createIdleParticles();
+        }
+
+        // Create idle particles
+        function createIdleParticles() {
+            const idleAnimation = document.getElementById("idleAnimation");
+
+            // Create 10-20 particles
+            const numParticles = Math.floor(Math.random() * 11) + 10;
+
+            for (let i = 0; i < numParticles; i++) {
+                const particle = document.createElement("div");
+                particle.className = "idle-particle";
+
+                // Random size
+                const size = Math.random() * 10 + 5; // 5px to 15px
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+
+                // Random position
+                const x = Math.random() * 100;
+                const y = Math.random() * 100;
+                particle.style.left = `${x}%`;
+                particle.style.top = `${y}%`;
+
+                // Random animation
+                const duration = Math.random() * 10 + 10; // 10s to 20s
+                const delay = Math.random() * 5;
+
+                particle.style.animation = `
+                    particleFloat ${duration}s linear ${delay}s infinite
+                `;
+
+                idleAnimation.appendChild(particle);
+            }
+
+            // Add CSS for particle animation
+            if (!document.getElementById("particleAnimationStyle")) {
+                const style = document.createElement("style");
+                style.id = "particleAnimationStyle";
+                style.textContent = `
+                    @keyframes particleFloat {
+                        0% {
+                            transform: translate(0, 0) rotate(0deg);
+                            opacity: 0;
+                        }
+                        10% {
+                            opacity: 1;
+                        }
+                        90% {
+                            opacity: 1;
+                        }
+                        100% {
+                            transform: translate(${Math.random() * 200 - 100}px, ${
+                    Math.random() * 200 - 100
+                }px) rotate(${Math.random() * 360}deg);
+                            opacity: 0;
+                        }
+                    }
+                `;
+                document.head.appendChild(style);
+            }
+        }
+
+        // Entrance animation
+        function startEntranceAnimation() {
+            const animation = document.getElementById("entranceAnimation");
+            const loginContainer = document.getElementById("loginContainer");
+
+            // Always show animation
+            animation.style.display = "flex";
+
+            // Hide animation and show login container after 4 seconds
+            setTimeout(() => {
+                animation.classList.add("hidden");
+                loginContainer.classList.add("visible");
+
+                // Remove animation from DOM after transition completes
+                setTimeout(() => {
+                    animation.style.display = "none";
+                }, 1000);
+            }, 4000);
+        }
+
+        // Show mobile about modal
+        function showMobileAbout() {
+            document.getElementById("mobileAboutModal").classList.add("active");
+            document.body.style.overflow = "hidden";
+        }
+
+        // Hide mobile about modal
+        function hideMobileAbout() {
+            document.getElementById("mobileAboutModal").classList.remove("active");
+            document.body.style.overflow = "auto";
+        }
+
+        // Show forgot password form
+        function showForgotPassword() {
+            document.getElementById("signInForm").style.display = "none";
+            document.getElementById("signUpForm").style.display = "none";
+            document.getElementById("emailVerificationForm").classList.remove("active");
+            document.getElementById("forgotPasswordForm").classList.add("active");
+            document.getElementById("formSubtitle").textContent =
+                "Reset your password";
+
+            // Clear all errors when switching forms
+            clearAllErrors();
+            document.getElementById("resetSuccessMessage").classList.remove("show");
+        }
+
+        // Back to login from forgot password
+        function backToLogin() {
+            document
+                .getElementById("forgotPasswordForm")
+                .classList.remove("active");
+            document.getElementById("signInForm").style.display = "block";
+            document.getElementById("formSubtitle").textContent =
+                "Sign in to continue your conversation with Dark";
+
+            // Clear all errors when switching forms
+            clearAllErrors();
+            document.getElementById("resetSuccessMessage").classList.remove("show");
+        }
+
+        // Send reset link
+        function sendResetLink() {
+            const email = document.getElementById("forgotEmail").value;
+
+            // Clear previous errors
+            clearAllErrors();
+            document.getElementById("resetSuccessMessage").classList.remove("show");
+
+            // Validate email
+            if (!email) {
+                showError("forgotEmail", "forgotEmailError");
+                return;
+            } else if (!isValidEmail(email)) {
+                showError("forgotEmail", "forgotEmailError");
+                document.getElementById("forgotEmailError").textContent =
+                    "Please enter a valid email address";
+                return;
+            }
+
+            // Check if email exists in our database
+            const users = JSON.parse(localStorage.getItem("darkAIUsers"));
+            if (!users || !users[email]) {
+                showError("forgotEmail", "forgotEmailNotExist");
+                return;
+            }
+
+            // Show success message
+            document.getElementById("resetSuccessMessage").classList.add("show");
+
+            // In a real application, you would send an email here
+            console.log(`Password reset link sent to: ${email}`);
+        }
+
+        // Switch to Sign Up form
+        function switchToSignUp() {
+            document.getElementById("signInForm").style.display = "none";
+            document.getElementById("signUpForm").style.display = "block";
+            document
+                .getElementById("forgotPasswordForm")
+                .classList.remove("active");
+            document.getElementById("emailVerificationForm").classList.remove("active");
+            document.getElementById("formSubtitle").textContent =
+                "Create your Dark AI account";
+
+            // Clear all errors when switching forms
+            clearAllErrors();
+            document.getElementById("resetSuccessMessage").classList.remove("show");
+
+            // Set default avatar
+            document.getElementById(
+                "avatarPreview"
+            ).innerHTML = `<img src="${defaultAvatar}" alt="Default Avatar">`;
+        }
+
+        // Switch to Sign In form
+        function switchToSignIn() {
+            document.getElementById("signUpForm").style.display = "none";
+            document.getElementById("signInForm").style.display = "block";
+            document
+                .getElementById("forgotPasswordForm")
+                .classList.remove("active");
+            document.getElementById("emailVerificationForm").classList.remove("active");
+            document.getElementById("formSubtitle").textContent =
+                "Sign in to continue your conversation with Dark";
+
+            // Clear all errors when switching forms
+            clearAllErrors();
+            document.getElementById("resetSuccessMessage").classList.remove("show");
+        }
+
+        // Back to sign up from email verification
+        function backToSignUp() {
+            document.getElementById("emailVerificationForm").classList.remove("active");
+            document.getElementById("signUpForm").style.display = "block";
+            document.getElementById("formSubtitle").textContent =
+                "Create your Dark AI account";
+
+            // Clear all errors when switching forms
+            clearAllErrors();
+        }
+
+        // Handle avatar upload
+        function handleAvatarUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    document.getElementById(
+                        "avatarPreview"
+                    ).innerHTML = `<img src="${e.target.result}" alt="User Avatar">`;
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // Check if email already exists
+        function checkEmailExists(email) {
+            const users = JSON.parse(localStorage.getItem("darkAIUsers"));
+            return users && users.hasOwnProperty(email);
+        }
+
+        // Check if account exists for login
+        function checkAccountExists(email) {
+            const users = JSON.parse(localStorage.getItem("darkAIUsers"));
+            return users && users.hasOwnProperty(email);
+        }
+
+        // Validate sign up form
+        function validateSignUp() {
+            let isValid = true;
+            const username = document.getElementById("username").value;
+            const email = document.getElementById("signupEmail").value;
+            const password = document.getElementById("signupPassword").value;
+
+            // Clear previous errors
+            clearAllErrors();
+
+            // Validate username
+            if (!username) {
+                showError("username", "usernameError");
+                isValid = false;
+            } else if (username.length > 12) {
+                showError("username", "usernameLengthError");
+                isValid = false;
+            }
+
+            // Validate email
+            if (!email) {
+                showError("signupEmail", "signupEmailError");
+                isValid = false;
+            } else if (!isValidEmail(email)) {
+                showError("signupEmail", "signupEmailError");
+                document.getElementById("signupEmailError").textContent =
+                    "Please enter a valid email address";
+                isValid = false;
+            } else if (checkEmailExists(email)) {
+                showError("signupEmail", "emailExistsError");
+                isValid = false;
+            }
+
+            // Validate password
+            if (!password) {
+                showError("signupPassword", "signupPasswordError");
+                isValid = false;
+            }
+
+            return isValid;
+        }
+
+        // Validate sign in form
+        function validateSignIn() {
+            let isValid = true;
+            const email = document.getElementById("email").value;
+            const password = document.getElementById("password").value;
+
+            // Clear previous errors
+            clearAllErrors();
+
+            // Validate email
+            if (!email) {
+                showError("email", "emailError");
+                isValid = false;
+            } else if (!isValidEmail(email)) {
+                showError("email", "emailError");
+                document.getElementById("emailError").textContent =
+                    "Please enter a valid email address";
+                isValid = false;
+            } else if (!checkAccountExists(email)) {
+                showError("email", "accountNotExist");
+                isValid = false;
+            }
+
+            // Validate password
+            if (!password) {
+                showError("password", "passwordError");
+                isValid = false;
+            }
+
+            return isValid;
+        }
+
+        // Start email verification process
+        function startEmailVerification() {
+            if (!validateSignUp()) {
+                return;
+            }
+
+            const username = document.getElementById("username").value;
+            const email = document.getElementById("signupEmail").value;
+            const password = document.getElementById("signupPassword").value;
+            const avatarPreview = document
+                .getElementById("avatarPreview")
+                .querySelector("img");
+            const avatar = avatarPreview ? avatarPreview.src : defaultAvatar;
+
+            // Store user data for later use
+            pendingUserData = {
+                username: username,
+                email: email,
+                password: password,
+                avatar: avatar,
+                createdAt: new Date().toISOString(),
+            };
+
+            // Set verification code to default (000000)
+            verificationCode = "000000";
+            verificationEmail = email;
+
+            // In a real application, you would send this code via email
+            console.log(`Verification code for ${email}: ${verificationCode}`);
+
+            // Show verification form
+            document.getElementById("signUpForm").style.display = "none";
+            document.getElementById("emailVerificationForm").classList.add("active");
+            document.getElementById("formSubtitle").textContent =
+                "Verify your email address";
+
+            // Clear verification inputs
+            const inputs = document.querySelectorAll(".verification-input");
+            inputs.forEach(input => {
+                input.value = "";
+            });
+
+            // Focus on first input
+            inputs[0].focus();
+
+            // Clear any previous errors
+            clearAllErrors();
+
+            // Reset resend code button
+            resetResendCodeButton();
+        }
+
+        // Reset resend code button to initial state
+        function resetResendCodeButton() {
+            const resendButton = document.getElementById("resendCodeButton");
+            const resendTimer = document.getElementById("resendTimer");
+            
+            resendButton.classList.remove("disabled");
+            resendButton.textContent = "Resend code";
+            resendTimer.style.display = "none";
+            canResendCode = true;
+        }
+
+        // Start countdown for resend code
+        function startResendCountdown() {
+            const resendButton = document.getElementById("resendCodeButton");
+            const resendTimer = document.getElementById("resendTimer");
+            const countdownElement = document.getElementById("countdown");
+            
+            resendButton.classList.add("disabled");
+            resendTimer.style.display = "block";
+            canResendCode = false;
+            
+            let countdown = 60;
+            countdownElement.textContent = countdown;
+            
+            resendTimer = setInterval(() => {
+                countdown--;
+                countdownElement.textContent = countdown;
+                
+                if (countdown <= 0) {
+                    clearInterval(resendTimer);
+                    resendButton.classList.remove("disabled");
+                    resendTimer.style.display = "none";
+                    resendButton.textContent = "Resend code";
+                    canResendCode = true;
+                }
+            }, 1000);
+        }
+
+        // Resend verification code
+        function resendVerificationCode() {
+            if (!verificationEmail || !canResendCode) return;
+
+            // Generate new verification code (still using default for demo)
+            verificationCode = "000000";
+
+            // In a real application, you would send this code via email
+            console.log(`New verification code for ${verificationEmail}: ${verificationCode}`);
+
+            // Clear verification inputs
+            const inputs = document.querySelectorAll(".verification-input");
+            inputs.forEach(input => {
+                input.value = "";
+            });
+
+            // Focus on first input
+            inputs[0].focus();
+
+            // Clear any previous errors
+            clearAllErrors();
+
+            // Start countdown for next resend
+            startResendCountdown();
+
+            // Show success message instead of error
+            alert("A new verification code has been sent to your email.");
+        }
+
+        // Verify email and complete sign up
+        function verifyEmailAndSignUp() {
+            // Get the entered code
+            const inputs = document.querySelectorAll(".verification-input");
+            let enteredCode = "";
+            inputs.forEach(input => {
+                enteredCode += input.value;
+            });
+
+            // Clear previous errors
+            clearAllErrors();
+
+            // Check if code is complete
+            if (enteredCode.length !== 6) {
+                // Show error on all inputs
+                inputs.forEach(input => {
+                    input.classList.add("error");
+                });
+                document.getElementById("verificationCodeError").textContent = "Please enter the complete 6-digit code";
+                document.getElementById("verificationCodeError").classList.add("show");
+                return;
+            }
+
+            // Check if code is correct
+            if (enteredCode !== verificationCode) {
+                // Show error on all inputs
+                inputs.forEach(input => {
+                    input.classList.add("error");
+                });
+                document.getElementById("verificationCodeError").textContent = "Wrong verification code";
+                document.getElementById("verificationCodeError").classList.add("show");
+                
+                // Clear inputs and focus on first one
+                setTimeout(() => {
+                    inputs.forEach(input => {
+                        input.value = "";
+                        input.classList.remove("error");
+                    });
+                    inputs[0].focus();
+                }, 500);
+                
+                return;
+            }
+
+            // Code is correct, complete sign up
+            completeSignUp();
+        }
+
+        // Complete the sign up process after verification
+        function completeSignUp() {
+            if (!pendingUserData) return;
+
+            // Save user to database
+            const users = JSON.parse(localStorage.getItem("darkAIUsers")) || {};
+            users[pendingUserData.email] = pendingUserData;
+            localStorage.setItem("darkAIUsers", JSON.stringify(users));
+
+            // Set as current user
+            const userData = {
+                name: pendingUserData.username,
+                email: pendingUserData.email,
+                avatar: pendingUserData.avatar,
+            };
+            localStorage.setItem("darkAIUser", JSON.stringify(userData));
+
+            // Redirect to main page
+            window.location.href = "index.html";
+        }
+
+        // Sign in function
+        function signIn() {
+            if (!validateSignIn()) {
+                return;
+            }
+
+            const email = document.getElementById("email").value;
+            const password = document.getElementById("password").value;
+
+            // Check if user exists and password matches
+            const users = JSON.parse(localStorage.getItem("darkAIUsers")) || {};
+            if (users[email] && users[email].password === password) {
+                // Set as current user
+                const userData = {
+                    name: users[email].username,
+                    email: email,
+                    avatar: users[email].avatar,
+                };
+                localStorage.setItem("darkAIUser", JSON.stringify(userData));
+
+                // Redirect to main page
+                window.location.href = "index.html";
+            } else {
+                // Show invalid credentials error
+                document.getElementById("invalidCredentials").classList.add("show");
+                document.getElementById("email").classList.add("error");
+                document.getElementById("password").classList.add("error");
+            }
+        }
+
+        // Social login function
+        function socialLogin(provider) {
+            // In a real implementation, this would integrate with OAuth
+            alert(
+                `In a real application, this would redirect to ${provider} OAuth login`
+            );
+        }
+
+        // Real-time validation for sign up form
+        document.addEventListener("DOMContentLoaded", function () {
+            // Username validation
+            document
+                .getElementById("username")
+                .addEventListener("input", function () {
+                    if (this.value) {
+                        hideError("username", "usernameError");
+                        hideError("username", "usernameLengthError");
+                    }
+                });
+
+            // Email validation for sign up
+            document
+                .getElementById("signupEmail")
+                .addEventListener("input", function () {
+                    if (this.value && isValidEmail(this.value)) {
+                        hideError("signupEmail", "signupEmailError");
+                        hideError("signupEmail", "emailExistsError");
+                    }
+                });
+
+            // Password validation for sign up
+            document
+                .getElementById("signupPassword")
+                .addEventListener("input", function () {
+                    if (this.value) {
+                        hideError("signupPassword", "signupPasswordError");
+                    }
+                });
+
+            // Email validation for sign in
+            document.getElementById("email").addEventListener("input", function () {
+                if (this.value && isValidEmail(this.value)) {
+                    hideError("email", "emailError");
+                    document
+                        .getElementById("invalidCredentials")
+                        .classList.remove("show");
+                    document.getElementById("accountNotExist").classList.remove("show");
+                }
+            });
+
+            // Password validation for sign in
+            document
+                .getElementById("password")
+                .addEventListener("input", function () {
+                    if (this.value) {
+                        hideError("password", "passwordError");
+                        document
+                            .getElementById("invalidCredentials")
+                            .classList.remove("show");
+                    }
+                });
+
+            // Email validation for forgot password
+            document
+                .getElementById("forgotEmail")
+                .addEventListener("input", function () {
+                    if (this.value && isValidEmail(this.value)) {
+                        hideError("forgotEmail", "forgotEmailError");
+                        hideError("forgotEmail", "forgotEmailNotExist");
+                    }
+                });
+
+            // Verification code input handling
+            const verificationInputs = document.querySelectorAll(".verification-input");
+            verificationInputs.forEach((input, index) => {
+                input.addEventListener("input", function() {
+                    // Clear error when user starts typing
+                    clearAllErrors();
+                    
+                    // Move to next input if current one is filled
+                    if (this.value.length === 1 && index < verificationInputs.length - 1) {
+                        verificationInputs[index + 1].focus();
+                    }
+                });
+                
+                input.addEventListener("keydown", function(e) {
+                    // Handle backspace
+                    if (e.key === "Backspace" && !this.value && index > 0) {
+                        verificationInputs[index - 1].focus();
+                    }
+                });
+            });
+
+            // Mobile about button event listeners
+            document.getElementById("mobileAboutBtn").addEventListener("click", showMobileAbout);
+            document.getElementById("mobileAboutClose").addEventListener("click", hideMobileAbout);
+            
+            // Close modal when clicking outside content
+            document.getElementById("mobileAboutModal").addEventListener("click", function(e) {
+                if (e.target === this) {
+                    hideMobileAbout();
+                }
+            });
+        });
+
+        // Start animation when page loads
+        document.addEventListener("DOMContentLoaded", function () {
+            initializeUsers();
+            startEntranceAnimation();
+
+            // Set default avatar for sign up form
+            document.getElementById(
+                "avatarPreview"
+            ).innerHTML = `<img src="${defaultAvatar}" alt="Default Avatar">`;
+
+            // Set up idle timer
+            resetIdleTimer();
+
+            // Add event listeners to reset idle timer
+            document.addEventListener("mousemove", resetIdleTimer);
+            document.addEventListener("keypress", resetIdleTimer);
+            document.addEventListener("click", resetIdleTimer);
+            document.addEventListener("scroll", resetIdleTimer);
+            document.addEventListener("touchstart", resetIdleTimer);
+        });
+
+        // Handle Enter key press
+        document.addEventListener("keypress", function (event) {
+            if (event.key === "Enter") {
+                const signInForm = document.getElementById("signInForm");
+                const signUpForm = document.getElementById("signUpForm");
+                const forgotPasswordForm =
+                    document.getElementById("forgotPasswordForm");
+                const emailVerificationForm = document.getElementById("emailVerificationForm");
+
+                if (signInForm.style.display !== "none") {
+                    signIn();
+                } else if (signUpForm.style.display !== "none") {
+                    startEmailVerification();
+                } else if (forgotPasswordForm.classList.contains("active")) {
+                    sendResetLink();
+                } else if (emailVerificationForm.classList.contains("active")) {
+                    verifyEmailAndSignUp();
+                }
+            }
+        });
+    </script>
+</body>
+</html>
